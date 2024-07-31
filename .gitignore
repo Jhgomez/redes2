@@ -1,0 +1,6 @@
+### Mac OS ###
+.DS_Store
+
+window word
+*.tmp
+~$works.docx
