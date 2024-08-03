@@ -5,7 +5,8 @@ The following is a list of commands used when configuring different nodes in the
 * **enable**: previous to configurations
 * **conf | configure ter | configure terminal**: either should work to enter configuration mode it depends on the version of paket tracer
 * **no ip domain lookup**: Saves time, if your switch is subscrided to a DNS service and you enter by error a command that doesn't exist it will waste time tyring to resolve it like if it was an IP addres
-* **enable secret $password**: enables a password so that only authorized users can change configurations, it runs only in config mode, remember to save config by running "write" command after it. To remove password requirement just append a "no" keyword at the beggining
+* **enable secret $password**: enables a password so that only authorized users can change configurations, it runs only in config mode, remember to save config by running "write" command after it. To remove password requirement just append a "no" keyword at the beggining. This password will be required after writing "enable" command
+* **configure a password at starting CLI(login)**: write the following commands while in config mode, **"line console 0"**, then **"pass | password"** followed by the password
 * **do wri | wri | write**: saves configurations of the node to a persistent storage, it can be executed in user mode but to run it while in the config mode append "do" at the beggining
 * **do sh mac-addres-table | sh mac-addres-table**: works in user mode but append "do" to run it in config mode to show a list of the mac addreses
 * **reload**: restarts node, it runs in user mode
