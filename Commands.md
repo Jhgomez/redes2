@@ -14,6 +14,7 @@ The following is a list of commands used when configuring different nodes in the
 * **create and configure a vlan**: enter the configuration mode and execute **vlan** followed by a name(usually a number), **name** followed by a name(letters, make sure to use a descriptive name), **exit**, **end** to exit config mode. There is a default vlan(vlan 1), by default all FastEthernet ports associated to this vlan. When creating vlans you have to define what vlan is associated to an specific network interfaces/port
 * **show vlan or show vlan brief**: shows a list of vlans configure in this node
 * **copy run | copy running-config star | copy running-config startup-config**: it runs in user mode, either of this commands will make save vlan-s and interface configurations(ip address, gateway, subnetmask) in persistent storage so that a node saves all set up. This is the equivalent to **do wri** inside of config mode
-* show vlan id #**
+* **configure a port to allow specific vlan(s)**: run the following commands in config mode **interface fas or interface fastethernet** followed by the port #, configure mode using **switchport mode** followed by the type, either trunk or access, then specify vlans tha will be allowed **switchport access vlan** followed by the vlan number
+* **show vlan id #**
 
 note that some of the configurations done by the previous commands like setting passwords at login and at access to config mode can be automated using a manager that will deoploy these configurations through an image 
