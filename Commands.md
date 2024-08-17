@@ -31,6 +31,8 @@ configuration mode it depends on the version of paket tracer
 
 * **show spannig-tree**: you can identify the root switch in a spanning tree procotol network using this command, only the root switch will display something indicating it is the root, you can attach de word **summary** to this command to get another version of the info. Visually the root switch will have all its connections enabled
 
+* **configuring DTP**: Dynamic trunking protocol negotiates if the interface(port) should become an access port or trunk. Most switches have this protocol enabled by default. You can check if this protocol is enable or not with **show interfaces fastEthernet 0/x switchport | include Negotiation**, to turn it off there is two options firts set the interface as an access port **swichport mode access** if you need the port to be trunk mode and you want to turn this protocol off run this command when configuring the interface **switchport nonegotiate**
+
 note that some of the configurations done by the previous commands like setting passwords at login and at access to config mode can be automated using a manager that will deoploy these configurations through an image 
 
 * **More commands to configure a trunk connections in a port(s)**: **interface fastethernet [port#]**, **switchport mode trunk**, **switchport trunk allowed vlan [all/vlan#]**
