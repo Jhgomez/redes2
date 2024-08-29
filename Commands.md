@@ -87,4 +87,4 @@ Repeat these steps for all **routers**.
     * **ip route `networkAddress` `subnetMask` `serialPortIpAddress`**
 Here we are telling the router how to find an external network, that means the `networkAddress` parameter points to an external network. `subnetMask` is belogns to that external network. `serialPortIoAddress` this address should be serial port Ip address from another router, this means we are Configuring Router A. Router B is directly connected to Router A, all that means is this `serialPortIpAddress` belongs to a port in router B.
 
-
+4. Now we need to do the same in the opposite direction, meaning we need to point the network IP address 
