@@ -73,7 +73,7 @@ Repeat these steps for all **routers**.
 
 1. Configure all **FastEthernet** ports. Enable computers to send packets to other networks through the switch and the router by configuring the **fastethernet** port that connects the switch and the router. 
     * **int fa0/0**: access the interface
-    * **ip address 192.168.1.1 255.255.255.0**: assign an ip address and the subnetmask, note this ip address will be the **default gateway** that will be configured in the pc, since there is three networks in this example the last two set of numbers vary per router like 1.0, 2.0 and 3.0
+    * **ip address 192.168.1.1 255.255.255.0**: assign an ip address and the subnetmask, note this ip address will be the **default gateway** that will be **configured in the pc**, since there is three networks in this example the last two set of numbers vary per router like 1.X, 2.X and 3.X
     * **no shut**: this will turn the interface on
 
     *Imagine the case that there is 3 LANs an each LAN has ip of 200.10.10.0, 200.10.20.0 and 200.10.30.0, respectavaly. Bare in mind that *
@@ -82,5 +82,7 @@ Repeat these steps for all **routers**.
     * **int s1/0**: acces the interface
     * **ip address 200.10.10.1 255.255.255.0**: If a router is using two serial ports you would configure a different IP address on each, so second port would have ip **200.10.10.2 255.255.255.0**, the ip addresses of these routers are also in a different network in each router for example the next router's last two set of numbers would be **20.X** and a third router **30.X**
     * **clock rate 64000**: this configures the frequency in the cable, since a cable as two sides we can only configure this command on one side, so only in one router the other router connected to this cable will only agree to this setting
-    
+
+3. Configure the 
+
 
