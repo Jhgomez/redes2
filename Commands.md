@@ -67,4 +67,4 @@ note that some of the configurations done by the previous commands like setting 
 * **show running-config**: shows ports configurations, you can see if a port will feature a host or access connection
 
 ## Static Routing
-In order to do static routing we need routers with serial ports for example a router of model 2621XM and add the ports NM-4A/s and interconnect to other routers using this serial ports only using serial DCE cables each router will have a connection to a different network using fastethernet ports 
+In order to do static routing we need routers with serial ports for example a router of model 2621XM and add the ports NM-4A/s and interconnect to other routers using this serial ports only using serial DCE cables each router will have a connection to a different network using fastethernet ports that will be connected to a switch
