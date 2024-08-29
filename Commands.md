@@ -67,16 +67,19 @@ note that some of the configurations done by the previous commands like setting 
 * **show running-config**: shows ports configurations, you can see if a port will feature a host or access connection
 
 ## Static Routing
-In order to do static routing we need **routers with serial ports** for example a router of model **2621XM** and add the ports **NM-4A/s** and interconnect to other routers using this serial ports only using serial **DCE** cables. Each router will have a connection to a different network using fastethernet ports that will be connected to a switch and those switches will then be connected either to other switches or in the example presented in class [Practica4RuteoEstatico](./Clase/Practica4RuteoEstatico.docx) they are connected to a computer using **Straight** cables between routers and switches and switches to computers.
+In order to do static routing we need **routers with serial ports** for example a router of model **2621XM** and add the ports **NM-4A/s** and interconnect to other routers using this serial ports only using serial **DCE** cables. Each router will have a connection to a different network(192.168.1.0/24, 192.168.2.0/24, 192.168.3.0/24) using fastethernet ports that will be connected to a switch and those switches will then be connected either to other switches or in the example presented in class [Practica4RuteoEstatico](./Clase/Practica4RuteoEstatico.docx) they are connected to a computer using **Straight** cables between routers and switches and switches to computers.
 
 Repeat these steps for all **routers**.
 
-1. Enable computers to send packets to other networks through the switch and the router by configuring the **fastethernet** port that connects the switch and the router. 
+1. Configure all **FastEthernet** ports. Enable computers to send packets to other networks through the switch and the router by configuring the **fastethernet** port that connects the switch and the router. 
     * **int fa0/0**: access the interface
-    * **ip address 192.168.1.1 255.255.255.0**: assign and ip address and the subnetmask, note this ip address will be the **default gateway** that will be configured in the pc
+    * **ip address 192.168.1.1 255.255.255.0**: assign an ip address and the subnetmask, note this ip address will be the **default gateway** that will be configured in the pc, since there is three networks in this example the last two set of numbers vary per router like 1.0, 2.0 and 3.0
     * **no shut**: this will turn the interface on
 
-    *Imagine the case that there is 3 LANs an each LAN has ip of 200.10.10.0, 200.10.20.0 and 200.10.30.0k, respectavaly. bare in mind that *
+    *Imagine the case that there is 3 LANs an each LAN has ip of 200.10.10.0, 200.10.20.0 and 200.10.30.0, respectavaly. Bare in mind that *
 
-2. Now we need to configure each **serial ports** connected to other router 
+2. Now we need to configure all **serial ports** that are connected to a router. Here we are just assigning an ip address to those ports so that we can direct packets from other networks to another network by linking the network ip address to serial port IP
+    * **int s1/0**: acces the interface
+    * **ip address 200.10.10.1 255.255.255.0**: If a router is using two serial ports you would configure a different IP address on each, so second port would have ip **200.10.10.2 255.255.255.0**
+    * ****
 
