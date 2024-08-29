@@ -67,6 +67,10 @@ note that some of the configurations done by the previous commands like setting 
 * **show running-config**: shows ports configurations, you can see if a port will feature a host or access connection
 
 ## Static Routing
-In order to do static routing we need **routers with serial ports** for example a router of model **2621XM** and add the ports **NM-4A/s** and interconnect to other routers using this serial ports only using serial **DCE** cables. Each router will have a connection to a different network using fastethernet ports that will be connected to a switch and those switches will then be connected either to other switches or in the example presented in class [Practica4RuteoEstatico](./Clase/Practica4RuteoEstatico.docx) they are connected to a computer using **Straight** cables between routers and switches and switches to computers
+In order to do static routing we need **routers with serial ports** for example a router of model **2621XM** and add the ports **NM-4A/s** and interconnect to other routers using this serial ports only using serial **DCE** cables. Each router will have a connection to a different network using fastethernet ports that will be connected to a switch and those switches will then be connected either to other switches or in the example presented in class [Practica4RuteoEstatico](./Clase/Practica4RuteoEstatico.docx) they are connected to a computer using **Straight** cables between routers and switches and switches to computers.
 
+1. Repeat these steps for all **routers**. Enable computers to send packets to other networks through the switch and the router by configuring the **fastethernet** port that connects the switch and the router. 
+    * **int fa0/0**: access the interface
+    * **ip address 192.168.1.1 255.255.255.0**: assign and ip address and the subnetmask, note this ip address will be the **default gateway** that will be configured in the pc
+    * f**no shut**: this will turn the interface on
 
