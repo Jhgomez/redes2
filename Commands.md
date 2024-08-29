@@ -87,4 +87,8 @@ Repeat these steps for all **routers**.
     * **ip route `networkAddress` `subnetMask` `serialPortIpAddress`**
 Here we are telling the router how to find an external network, that means the `networkAddress` parameter points to an external network. `subnetMask` is belogns to that external network. `serialPortIoAddress` this address should be serial port Ip address from another router, this means we are Configuring Router A. Router B is directly connected to Router A, all that means is this `serialPortIpAddress` belongs to a port in router B. Example **ip route 192.168.2.0 255.255.255.0 200.10.20.0**
 
-4. Now we need to do the same in the opposite direction, meaning we need to point the network managed in Router A by doing this configurtations in Router B, exampele
+4. Now we need to do the same in the opposite direction, meaning we need to point the network managed in Router A by doing this configurtations in Router B, example: **ip route 192.168.1.0 255.255.255.0 200.10.10.0**
+
+5. If we need to connect from Router C to Router A but pass through Router B, you have to configure all ports you will say "all traffic sent to network A from network C first needs to be directed to port in Router B and all requests to network A received in router B needs to tavel to port in Router A"
+
+1. To configure RIP protocol follow this steps: 
