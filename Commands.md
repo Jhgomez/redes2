@@ -85,6 +85,6 @@ Repeat these steps for all **routers**.
 
 3. Configure the static routing. Will be able to send packets to another network, but not able to recieve a response from that network yet 
     * **ip route `networkAddress` `subnetMask` `serialPortIpAddress`**
-Here we are telling the router how to find an external network, that means the `networkAddress` parameter points to an external network. `subnetMask` is belogns to that external network. `serialPortIoAddress` this address should be serial port Ip address from another router, this means we are Configuring Router A. Router B is directly connected to Router A, all that means is this `serialPortIpAddress` belongs to a port in router B.
+Here we are telling the router how to find an external network, that means the `networkAddress` parameter points to an external network. `subnetMask` is belogns to that external network. `serialPortIoAddress` this address should be serial port Ip address from another router, this means we are Configuring Router A. Router B is directly connected to Router A, all that means is this `serialPortIpAddress` belongs to a port in router B. Example **ip route 192.168.2.0 255.255.255.0 200.10.20.0**
 
-4. Now we need to do the same in the opposite direction, meaning we need to point the network IP address 
+4. Now we need to do the same in the opposite direction, meaning we need to point the network managed in Router A by doing this configurtations in Router B, exampele
