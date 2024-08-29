@@ -67,4 +67,4 @@ note that some of the configurations done by the previous commands like setting 
 * **show running-config**: shows ports configurations, you can see if a port will feature a host or access connection
 
 ## Static Routing
-
+In order to do static routing we need routers with serial ports  interconected using 
