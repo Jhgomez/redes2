@@ -91,4 +91,7 @@ Here we are telling the router how to find an external network, that means the `
 
 5. If we need to connect from Router C to Router A but pass through Router B, you have to configure all ports you will say "all traffic sent to network A from network C first needs to be directed to port in Router B and all requests to network A received in router B needs to tavel to port in Router A"
 
-1. To configure RIP protocol follow this steps: 
+To configure RIP protocol follow this steps: 
+
+1. **router RIP**: this just enters RIP configurations context
+2. **net [router or network addreesss]**: add ip adresses of networks and routers
