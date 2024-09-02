@@ -81,7 +81,9 @@ This example is more complex because:
 
 * In each switch we assign a different ip address for the same VLAN We also assign the same default gateway number to a each switch with command in config mode `ip default-gateway [DefaultGatewayIpAddress]`
 
-* Remember the interface between router to switch and switch to swith has to be a **trunk** connection while switch to computer has to be an **access** connection
+* Remember the interface between router to switch and switch to swith has to be a **trunk** connection while switch to computer has to be an **access** connection, this is only configured in switches
+
+* Next we configured sub-interfaces in router, first access the sub-interface `interface fastEthernet 0/0.1`. Second, we define the vlan we allow`encapsulation dot1Q [vlanID] [navitve](this keyboard is optional as opposed to vlanId)`. Third, we assign an ip address `ip address [ipAddress] [subnetmask]` and here note that the ip address has to be the same as the default gateway used in the computers inside the vlan we are routing here. This step was also done in the simple example
 
 
 In order to do static routing we need **routers with serial ports** for example a router of model **2621XM** and add the ports **NM-4A/s** and interconnect to other routers using this serial ports only using serial **DCE** cables. Each router will have a connection to a different network(192.168.1.0/24, 192.168.2.0/24, 192.168.3.0/24) using fastethernet ports that will be connected to a switch and those switches will then be connected either to other switches or in the example presented in class [Practica4RuteoEstatico](./Clase/Practica4RuteoEstatico.docx) they are connected to a computer using **Straight** cables between routers and switches and switches to computers.
