@@ -76,7 +76,7 @@ We can route VLANs or LANs, this means we can intercommunicate between networks 
 #### Complex example
 [two switches connected, one of them connected to a router and one computer connected to each switch](./Clase/practica3VlanRuteoComplejo.pdf)
 
-This example is more complex because we are assigning a vlan an ip with the following commands `interface vlan [vlanId]`, ``
+This example is more complex because we are assigning a vlan an ip with the following commands `interface vlan [vlanId]`, `ip address [ipAddress] [subnetmask]`, in each switch we assign a different ip address for the same VLAN We also assign the same default gateway to a each switch with command in config mode `ip default-gateway [DefaultGatewayIpAddress]`
 
 In order to do static routing we need **routers with serial ports** for example a router of model **2621XM** and add the ports **NM-4A/s** and interconnect to other routers using this serial ports only using serial **DCE** cables. Each router will have a connection to a different network(192.168.1.0/24, 192.168.2.0/24, 192.168.3.0/24) using fastethernet ports that will be connected to a switch and those switches will then be connected either to other switches or in the example presented in class [Practica4RuteoEstatico](./Clase/Practica4RuteoEstatico.docx) they are connected to a computer using **Straight** cables between routers and switches and switches to computers.
 
