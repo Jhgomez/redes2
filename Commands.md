@@ -158,7 +158,7 @@ It is important to activate intervlan communication, if using dynamic routing, b
 
 
 #### Example Using OSPF
-You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
+You can see the topology [here](./Lab/Clase6.pdf). Note we don't need to configure trunk or access interfaces in layer 2 switches at all. Use following commands:
 
 1. Configure PC IPs, the default gateway in each pc has to match the IP address we are going to assign to the port in the multi layer switch we have right on top of the PC
 
@@ -168,7 +168,7 @@ You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
 
 4. `router ospf [proccess id]`: proccess id can be any number
 
-5. `network [network address] [wildcard] area [ospf area number]`: Repeat this step the same number as networks connected to this multilayer switch. Netork address is just the network address we are registering, wildcard is the subnetmask negated example: 255.255.255.0 negation is 0.0..0.255, and area parameter is a random number that **has to match** on all nodes. for example in multilayer switch 0 we would run `ip routing`, `router ospf 10`, `network 192.168.10.0 0.0.0.255 area 100`, next network `network 193.50.10.0 0.0.0.255 area 100`
+5. `network [network address] [wildcard] area [ospf area number]`: Repeat this step the same number as networks connected to this multilayer switch. Netork address is just the network address we are registering, wildcard is the subnetmask negated example: 255.255.255.0 negation is 0.0.0.255, and area parameter is a random number that **has to match** on all nodes. for example in multilayer switch 0 we would run `ip routing`, `router ospf 10`, `network 192.168.10.0 0.0.0.255 area 100`, next network `network 193.50.10.0 0.0.0.255 area 100`
 
 6. Repeat steps 3-5 **on router 1**, `ip routing`, `router ospf 20`(different proccess number), `network 193.50.10.0 0.0.0.255 area 100`(same are), next network `network 193.50.20.0 0.0.0.255 area 100`(same area)
 
