@@ -132,4 +132,7 @@ We use this protocol to announce all networks, that means inform all connected r
 
 ## Show Comma nds
 
-* `show ip route`: this command can run from privileged mode, it shows the current state of the routing table on a router.
+* `show ip route`: this command can run from privileged mode, it shows the current state of the routing table on a router. This is prefered when checking routes for example when working with RIP protocol
+
+* `show ip interface`: it runs in privileged mode. It gets a detailed listing of all the IP-related characteristics of an interface, either a router or switch, etc.
+
