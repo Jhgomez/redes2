@@ -129,3 +129,7 @@ It looks like it is pretty similar to static routing the only difference is in t
 Routing information protocol is based on distance costs, it determines the best route to take depending depending on the jumps it has to make to reach its destination, a jump happens when it reaches a router and goes to the next, that is one jump.
 
 We use this protocol to announce all networks, that means inform all connected routers about the networks that are connected to this autonomus system(AS)
+
+## Show Comma nds
+
+* `show ip routing`: this command can run from privileged mode, it shows the current state of the routing table on a router.
