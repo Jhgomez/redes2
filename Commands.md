@@ -121,3 +121,6 @@ To configure RIP protocol follow this steps:
 
 1. **router RIP**: this just enters RIP configurations context
 2. **net [router or network addreesss]**: add ip adresses of networks and routers
+
+## Dynamic Routing
+It looks like it is pretty similar to static routing the only difference is in the routing command, you have to enter 0.0.0.0 for the network address and also 0.0.0.0 for the subnet mask, this zeros means enter address to any address, that means any address goes to this serail port address. Check the real short [example](./Clase//Practica4_C_DynamicRouting_defaultRoute_VLAN.pdf)
