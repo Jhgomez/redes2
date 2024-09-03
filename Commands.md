@@ -123,9 +123,17 @@ To configure RIP protocol follow this steps:
 2. **net [router or network addreesss]**: add ip adresses of networks and routers
 
 ## Dynamic Routing
-It looks like it is pretty similar to static routing the only difference is in the routing command, you have to enter 0.0.0.0 for the network address and also 0.0.0.0 for the subnet mask, this zeros means enter address to any address, that means any address goes to this serail port address. Check the real short [example](./Clase//Practica4_C_DynamicRouting_defaultRoute_VLAN.pdf)
+It looks like it is pretty similar to static routing the only difference is in the routing command, you have to enter 0.0.0.0 for the network address and also 0.0.0.0 for the subnet mask, this zeros means enter address to any address, that means any address goes to this serail port address. Check the real short [example](./Clase//Practica4_C_DynamicRouting_defaultRoute_VLAN.pdf).
 
-### Example Using RIP
+There is two types of protocols in dynamic routing
+1. **IGP**: They are used when routing "local" networks. That means all networks in an autonomous systems belongs and are managed by one entity. The protocols **OSPF** **EIGRP** **RIP**
+
+2. **EGP**: These protocols are used when routing to an "external" autonomous system, that means it helps an autonomous system administrated by an entity communicate with another AS that logically belongs to another entity. An example of this protcols is **BGP**
+
+### Dinamically route LANs
+When routing LANs we should use routers, switches doesnt require configurations in their terminal
+
+#### Example Using RIP
 Routing information protocol is based on distance costs, it determines the best route to take depending depending on the jumps it has to make to reach its destination, a jump happens when it reaches a router and goes to the next, that is one jump.
 
 We use this protocol to announce all networks, that means inform all connected routers about the networks that are connected to this autonomus system(AS)
@@ -142,7 +150,42 @@ Instructions
 
 4. `show ip route`: Run it in **R1**, now you can se routes with an **R** label, in parenthesis you can se **(120/1)** this means it has less priority than static routes
 
-## Show Comma nds
+### Dinamically Route VLANs
+We have examples using EIGRP and OSPF [here](./Lab/Clase6.pdf). Note here we use multilayer switches which are layer 3 devices just like routers but routes are used when routing physical networks.
+
+It is important to activate intervlan communication, if using dynamic routing, before configuring any **IGP** protocol by using the following command
+* **`ip routing`**: run it in config mode
+
+
+#### Example Using OSPF
+You can see the topology [here](./Lab/Clase6.pdf). Note we don't need to configure trunk or access interfaces in layer 2 switches at all.   Use following commands:
+
+1. Configure PC IPs, the default gateway in each pc has to match the IP address we are going to assign to the port in the multi layer switch we have right on top of the PC
+
+2. We need to assign the IP address in each multi layer switch, in order to do this we access the interface and run `no switchport` and then the regular `ip address` command, check the note above. In this example from left to right going one node by one node the the nodes will have the following IP addresses pc4 `192.168.10.2`(default gateway of `192.168.10.1`), fa0/2 `192.168.10.1`, fa0/1 `193.50.10.2`, fa0/1 `193.50.10.1`, fa0/2 `193.50.20.2`, fa0/1 `193.50.20.1`, fa0/2 `192.168.20.1`, pc5 `192.168.20.2`(default gateway of `192.168.20.1`)
+
+3. First always activate intervlan `ip routing`
+
+4. `router ospf [proccess id]`: proccess id can be any number
+
+5. `network [network address] [wildcard] area [ospf area number]`: Repeat this step the same number as networks connected to this multilayer switch. Netork address is just the network address we are registering, wildcard is the subnetmask negated example: 255.255.255.0 negation is 0.0.0.255, and area parameter is a random number that **has to match** on all nodes. for example in multilayer switch 0 we would run `ip routing`, `router ospf 10`, `network 192.168.10.0 0.0.0.255 area 100`, next network `network 193.50.10.0 0.0.0.255 area 100`
+
+6. Repeat steps 3-5 **on router 1**, `ip routing`, `router ospf 20`(different proccess number), `network 193.50.10.0 0.0.0.255 area 100`(same are), next network `network 193.50.20.0 0.0.0.255 area 100`(same area)
+
+7. Repeat step 6 **on router 3**
+
+#### Example using EIGRP
+I couldn't made setup this topology, so I need to confirm the steps to make it work. You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
+
+1. First always activate intervlan `ip routing`
+
+2. `router eigrp [as number]`
+
+3. `network [network address]`
+
+4. no auto-summary
+
+## Show Commands
 
 * `show ip route`: this command can run from privileged mode, it shows the current state of the routing table on a router. This is prefered when checking routes for example when working with RIP protocol
 
