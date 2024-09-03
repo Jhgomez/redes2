@@ -158,7 +158,7 @@ It is important to activate intervlan communication, if using dynamic routing, b
 
 
 #### Example Using OSPF
-You can see the topology [here](./Lab/Clase6.pdf). Note we don't need to configure trunk or access interfaces in layer 2 switches at all. Use following commands:
+You can see the topology [here](./Lab/Clase6.pdf). Note we don't need to configure trunk or access interfaces in layer 2 switches at all.   Use following commands:
 
 1. Configure PC IPs, the default gateway in each pc has to match the IP address we are going to assign to the port in the multi layer switch we have right on top of the PC
 
@@ -175,7 +175,7 @@ You can see the topology [here](./Lab/Clase6.pdf). Note we don't need to configu
 7. Repeat step 6 **on router 3**
 
 #### Example using EIGRP
-You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
+I couldn't made setup this topology, so I need to confirm the steps to make it work. You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
 
 1. First always activate intervlan `ip routing`
 
