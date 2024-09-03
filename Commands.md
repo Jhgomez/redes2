@@ -93,7 +93,7 @@ Read the [Instructions](./Clase/Practica4_B_LANRuteoEstatico.pdf)
 
 The difference here is that we create dont create the networks virtually, they are created physically 
 
-In order to do static routing we need **routers with serial ports** for example a router of model **2621XM** and add the ports **NM-4A/s** and interconnect to other routers using this serial ports only using serial **DCE** cables. Each router will have a connection to a different network(192.168.1.0/24, 192.168.2.0/24, 192.168.3.0/24. note the address with the 0 at the end means any ip adress that has that format and ends in any numer, 0 means any number we put /24 because the switches we have only have 24 ports) using fastethernet ports that will be connected to a switch and those switches will then be connected either to other switches or in the example presented in class [Practica4RuteoEstatico](./Clase/Practica4RuteoEstatico.docx) they are connected to a computer using **Straight** cables between routers and switches and switches to computers.
+In order to do static routing we need **routers with serial ports** for example a router of model **2621XM** and add the ports **NM-4A/s** and interconnect to other routers using this serial ports only using serial **DCE** cables. Each router will have a connection to a different network(192.168.1.0/24, 192.168.2.0/24, 192.168.3.0/24. note the address with the 0 at the end means any ip adress that has that format and ends in any numer, 0 means any number we put /24 because the switches we have only have 24 ports) using fastethernet ports that will be connected to a switch and those switches will then be connected either to other switches or in the example presented in class [Practica4_B_LANRuteoEstatico](./Clase/Practica4_B_LANRuteoEstatico.pdf) they are connected to a computer using **Straight** cables between routers and switches and switches to computers.
 
 Repeat these steps for all **routers**.
 
@@ -124,3 +124,27 @@ To configure RIP protocol follow this steps:
 
 ## Dynamic Routing
 It looks like it is pretty similar to static routing the only difference is in the routing command, you have to enter 0.0.0.0 for the network address and also 0.0.0.0 for the subnet mask, this zeros means enter address to any address, that means any address goes to this serail port address. Check the real short [example](./Clase//Practica4_C_DynamicRouting_defaultRoute_VLAN.pdf)
+
+### Example Using RIP
+Routing information protocol is based on distance costs, it determines the best route to take depending depending on the jumps it has to make to reach its destination, a jump happens when it reaches a router and goes to the next, that is one jump.
+
+We use this protocol to announce all networks, that means inform all connected routers about the networks that are connected to this autonomus system(AS)
+
+In this example we were given a [base topology](./Clase/Practica5_base_topology.pkt) 
+
+Instructions
+
+1. `show ip route`: We check what networks are directly connected to **R1**, the ones with the **C** label.
+
+2. In this step we're going to inform other routers about the networks directly connected so they can be routed. Enter configuration mode in **R1** and enter command `router rip`, `version 2` version 2 supports networks without a class, that means the network doesn't necessarily define the default subnetmask. Now publish/announce the network(s) to the other routers(it will be done by RIP protocol automatically) `network 192.168.1.0`and any other network with the **C** label
+
+3. Repeat step 1 and 2 in router **R2**
+
+4. `show ip route`: Run it in **R1**, now you can se routes with an **R** label, in parenthesis you can se **(120/1)** this means it has less priority than static routes
+
+## Show Comma nds
+
+* `show ip route`: this command can run from privileged mode, it shows the current state of the routing table on a router. This is prefered when checking routes for example when working with RIP protocol
+
+* `show ip interface`: it runs in privileged mode. It gets a detailed listing of all the IP-related characteristics of an interface, either a router or switch, etc.
+
