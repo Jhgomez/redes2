@@ -158,7 +158,17 @@ It is important to activate intervlan communication, if using dynamic routing, b
 
 
 #### Example Using OSPF
-You can see the topology [here](./Lab/Clase6.pdf).
+You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
+
+1. Configure PC IPs, the default gateway in each pc has to match the IP address we are going to assign to the port in the multi layer switch we have right on top of the PC
+
+2. We need to assign the IP address in each multi layer switch, in order to do this we access the interface and run `no switchport` and then the regular `ip address` command, check the note above. In this example from left to right going one node by one node the the nodes will have the following IP addresses pc4 `198.168.10.2`(default gateway of `198.168.10.1`), fa0/2 `198.168.10.1`, fa0/1 `193.50.10.2`, fa0/1 `193.50.10.1`, fa0/2 `193.50.20.2`, fa0/1 `193.50.20.1`, fa0/2 `192.168.20.1`, pc5 `198.168.20.2`(default gateway of `198.168.20.1`)
+
+1. First always activate intervlan `ip routing`
+
+2. `router ospf [proccess id]`: proccess id can be any number
+
+3. `network [network address] [wildcard] area [ospf area number]`: net address is just the network address we are registering, wildcard is the subnetmask negated example: 255.255.255.0 negation is 0.0..0.255, and area parameter is a random number that **has to match** on all nodes
 
 #### Example using EIGRP
 You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
