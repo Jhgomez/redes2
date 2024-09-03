@@ -70,6 +70,7 @@ note that some of the configurations done by the previous commands like setting 
 We can route VLANs or LANs, this means we can intercommunicate between networks either static or dinamically. Static routing means is all set up, only networks we set up are able to communicate. we can define different set ups, there are a lot of configurations we can have or ommit
 
 ### Statically route VLANs
+
 #### A simple example
 [One router, one swith and three networks/vlans with two computers each](./Clase/Practica3SencilloRouterRuteroVlans.pdf)
 
@@ -87,8 +88,12 @@ This example is more complex because:
 
 * **(IMPORTANT)** Next we configured sub-interfaces in router, first access the sub-interface `interface fastEthernet 0/0.1`. Second, we define the vlan we allow`encapsulation dot1Q [vlanID] [navitve](this keyboard is optional as opposed to vlanId)`. Third, we assign an ip address `ip address [ipAddress] [subnetmask]` and here note that the ip address has to be the same as the default gateway used in the computers inside the vlan we are routing here.
 
+### Statically route LANs
+Read the [Instructions](./Clase/Practica4_B_LANRuteoEstatico.pdf)
 
-In order to do static routing we need **routers with serial ports** for example a router of model **2621XM** and add the ports **NM-4A/s** and interconnect to other routers using this serial ports only using serial **DCE** cables. Each router will have a connection to a different network(192.168.1.0/24, 192.168.2.0/24, 192.168.3.0/24) using fastethernet ports that will be connected to a switch and those switches will then be connected either to other switches or in the example presented in class [Practica4RuteoEstatico](./Clase/Practica4RuteoEstatico.docx) they are connected to a computer using **Straight** cables between routers and switches and switches to computers.
+The difference here is that we create dont create the networks virtually, they are created physically 
+
+In order to do static routing we need **routers with serial ports** for example a router of model **2621XM** and add the ports **NM-4A/s** and interconnect to other routers using this serial ports only using serial **DCE** cables. Each router will have a connection to a different network(192.168.1.0/24, 192.168.2.0/24, 192.168.3.0/24. note the address with the 0 at the end means any ip adress that has that format and ends in any numer, 0 means any number we put /24 because the switches we have only have 24 ports) using fastethernet ports that will be connected to a switch and those switches will then be connected either to other switches or in the example presented in class [Practica4RuteoEstatico](./Clase/Practica4RuteoEstatico.docx) they are connected to a computer using **Straight** cables between routers and switches and switches to computers.
 
 Repeat these steps for all **routers**.
 
@@ -104,11 +109,11 @@ Repeat these steps for all **routers**.
     * **ip address 200.10.10.1 255.255.255.0**: If a router is using two serial ports you would configure a different IP address on each, so second port would have ip **200.10.10.2 255.255.255.0**, the ip addresses of these routers are also in a different network in each router for example the next router's last two set of numbers would be **20.X** and a third router **30.X**
     * **clock rate 64000**: this configures the frequency in the cable, since a cable as two sides we can only configure this command on one side, so only in one router the other router connected to this cable will only agree to this setting
 
-3. Configure the static routing. Will be able to send packets to another network, but not able to recieve a response from that network yet 
+3. Configure the static routing.
     * **ip route `networkAddress` `subnetMask` `serialPortIpAddress`**
 Here we are telling the router how to find an external network, that means the `networkAddress` parameter points to an external network. `subnetMask` is belogns to that external network. `serialPortIoAddress` this address should be serial port Ip address from another router, this means we are Configuring Router A. Router B is directly connected to Router A, all that means is this `serialPortIpAddress` belongs to a port in router B. Example **ip route 192.168.2.0 255.255.255.0 200.10.20.0**
 
-4. Now we need to do the same in the opposite direction, meaning we need to point the network managed in Router A by doing this configurtations in Router B, example: **ip route 192.168.1.0 255.255.255.0 200.10.10.0**
+4.  At this moment we are able to send packets to another network, but not able to recieve a response from that network yet. Now we need to do the same in the opposite direction, meaning we need to point the network managed in Router A by doing this configurtations in Router B, example: **ip route 192.168.1.0 255.255.255.0 200.10.10.0**
 
 5. If we need to connect from Router C to Router A but pass through Router B, you have to configure all ports you will say "all traffic sent to network A from network C first needs to be directed to port in Router B and all requests to network A received in router B needs to tavel to port in Router A"
 
