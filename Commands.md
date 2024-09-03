@@ -125,7 +125,10 @@ To configure RIP protocol follow this steps:
 ## Dynamic Routing
 It looks like it is pretty similar to static routing the only difference is in the routing command, you have to enter 0.0.0.0 for the network address and also 0.0.0.0 for the subnet mask, this zeros means enter address to any address, that means any address goes to this serail port address. Check the real short [example](./Clase//Practica4_C_DynamicRouting_defaultRoute_VLAN.pdf)
 
-### Example Using RIP
+### Dinamically route LANs
+When routing LANs we should use routers, switches doesnt require configurations in their terminal
+
+#### Example Using RIP
 Routing information protocol is based on distance costs, it determines the best route to take depending depending on the jumps it has to make to reach its destination, a jump happens when it reaches a router and goes to the next, that is one jump.
 
 We use this protocol to announce all networks, that means inform all connected routers about the networks that are connected to this autonomus system(AS)
@@ -141,6 +144,12 @@ Instructions
 3. Repeat step 1 and 2 in router **R2**
 
 4. `show ip route`: Run it in **R1**, now you can se routes with an **R** label, in parenthesis you can se **(120/1)** this means it has less priority than static routes
+
+### Dinamically Route VLANs
+We have examples using EIGRP and 
+
+#### Example Using OSPF
+You can see the topology [here](./Lab/Clase6.pdf). Note the switch just 
 
 ## Show Comma nds
 
