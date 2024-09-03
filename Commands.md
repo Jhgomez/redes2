@@ -170,7 +170,9 @@ You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
 
 5. `network [network address] [wildcard] area [ospf area number]`: Repeat this step the same number as networks connected to this multilayer switch. Netork address is just the network address we are registering, wildcard is the subnetmask negated example: 255.255.255.0 negation is 0.0..0.255, and area parameter is a random number that **has to match** on all nodes. for example in multilayer switch 0 we would run `ip routing`, `router ospf 10`, `network 192.168.10.0 0.0.0.255 area 100`, next network `network 193.50.10.0 0.0.0.255 area 100`
 
+6. Repeat steps 3-5 **on router 1**, `ip routing`, `router ospf 20`(different proccess number), `network 193.50.10.0 0.0.0.255 area 100`(same are), next network `network 193.50.20.0 0.0.0.255 area 100`(same area)
 
+7. Repeat step 6 **on router 3**
 
 #### Example using EIGRP
 You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
