@@ -130,6 +130,18 @@ Routing information protocol is based on distance costs, it determines the best 
 
 We use this protocol to announce all networks, that means inform all connected routers about the networks that are connected to this autonomus system(AS)
 
+In this example we were given a [base topology](./Clase/Practica5_base_topology.pkt) 
+
+Instructions
+
+1. `show ip route`: We check what networks are directly connected to **R1**, the ones with the **C** label.
+
+2. In this step we're going to inform other routers about the networks directly connected so they can be routed. Enter configuration mode in **R1** and enter command `router rip`, `version 2` version 2 supports networks without a class, that means the network doesn't necessarily define the default subnetmask. Now publish/announce the network(s) to the other routers(it will be done by RIP protocol automatically) `network 192.168.1.0`and any other network with the **C** label
+
+3. Repeat step 1 and 2 in router **R2**
+
+4. `show ip route`: Run it in **R1**, now you can se routes with an **R** label, in parenthesis you can se **(120/1)** this means it has less priority than static routes
+
 ## Show Comma nds
 
 * `show ip route`: this command can run from privileged mode, it shows the current state of the routing table on a router. This is prefered when checking routes for example when working with RIP protocol
