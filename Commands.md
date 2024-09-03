@@ -153,12 +153,23 @@ Instructions
 ### Dinamically Route VLANs
 We have examples using EIGRP and OSPF [here](./Lab/Clase6.pdf). Note here we use multilayer switches which are layer 3 devices just like routers but routes are used when routing physical networks.
 
-It is important to activate intervlan communication, if using dynamic routing, using the following command
+It is important to activate intervlan communication, if using dynamic routing, before configuring any **IGP** protocol by using the following command
 * **`ip routing`**: run it in config mode
 
 
 #### Example Using OSPF
-You can see the topology [here](./Lab/Clase6.pdf). Note the switch just 
+You can see the topology [here](./Lab/Clase6.pdf).
+
+#### Example using EIGRP
+You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
+
+1. First always activate intervlan `ip routing`
+
+2. `router eigrp [as number]`
+
+3. `network [network address]`
+
+4. no auto-summary
 
 ## Show Commands
 
