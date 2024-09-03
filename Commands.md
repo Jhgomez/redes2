@@ -151,7 +151,11 @@ Instructions
 4. `show ip route`: Run it in **R1**, now you can se routes with an **R** label, in parenthesis you can se **(120/1)** this means it has less priority than static routes
 
 ### Dinamically Route VLANs
-We have examples using EIGRP and OSPF [here](./Lab/Clase6.pdf). Note here we use multilayer switches which are layer 3 devices just like routers but routes are used when routing physical networks 
+We have examples using EIGRP and OSPF [here](./Lab/Clase6.pdf). Note here we use multilayer switches which are layer 3 devices just like routers but routes are used when routing physical networks.
+
+It is important to activate intervlan communication, if using dynamic routing, using the following command
+* **`ip routing`**: run it in config mode
+
 
 #### Example Using OSPF
 You can see the topology [here](./Lab/Clase6.pdf). Note the switch just 
