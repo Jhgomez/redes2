@@ -123,7 +123,12 @@ To configure RIP protocol follow this steps:
 2. **net [router or network addreesss]**: add ip adresses of networks and routers
 
 ## Dynamic Routing
-It looks like it is pretty similar to static routing the only difference is in the routing command, you have to enter 0.0.0.0 for the network address and also 0.0.0.0 for the subnet mask, this zeros means enter address to any address, that means any address goes to this serail port address. Check the real short [example](./Clase//Practica4_C_DynamicRouting_defaultRoute_VLAN.pdf)
+It looks like it is pretty similar to static routing the only difference is in the routing command, you have to enter 0.0.0.0 for the network address and also 0.0.0.0 for the subnet mask, this zeros means enter address to any address, that means any address goes to this serail port address. Check the real short [example](./Clase//Practica4_C_DynamicRouting_defaultRoute_VLAN.pdf).
+
+There is two types of protocols in dynamic routing
+1. **IGP**: They are used when routing "local" networks. That means all networks in an autonomous systems belongs and are managed by one entity. The protocols **OSPF** **EIGRP** **RIP**
+
+2. **EGP**: These protocols are used when routing to an "external" autonomous system, that means it helps an autonomous system administrated by an entity communicate with another AS that logically belongs to another entity. An example of this protcols is **BGP**
 
 ### Dinamically route LANs
 When routing LANs we should use routers, switches doesnt require configurations in their terminal
@@ -146,12 +151,12 @@ Instructions
 4. `show ip route`: Run it in **R1**, now you can se routes with an **R** label, in parenthesis you can se **(120/1)** this means it has less priority than static routes
 
 ### Dinamically Route VLANs
-We have examples using EIGRP and 
+We have examples using EIGRP and OSPF [here](./Lab/Clase6.pdf). Note here we use multilayer switches which are layer 3 devices just like routers but routes are used when routing physical networks 
 
 #### Example Using OSPF
 You can see the topology [here](./Lab/Clase6.pdf). Note the switch just 
 
-## Show Comma nds
+## Show Commands
 
 * `show ip route`: this command can run from privileged mode, it shows the current state of the routing table on a router. This is prefered when checking routes for example when working with RIP protocol
 
