@@ -164,7 +164,7 @@ You can see the topology [here](./Lab/Clase6.pdf). Note we don't need to configu
 
 1. Configure PC IPs, the default gateway in each pc has to match the IP address we are going to assign to the port in the multi layer switch we have right on top of the PC
 
-2. We need to assign the IP address in each multi layer switch, in order to do this we access the interface and run `no switchport` and then the regular `ip address` command, check the note above. In this example from left to right going one node by one node the the nodes will have the following IP addresses pc4 `192.168.10.2`(default gateway of `192.168.10.1`), fa0/2 `192.168.10.1`, fa0/1 `193.50.10.2`, fa0/1 `193.50.10.1`, fa0/2 `193.50.20.2`, fa0/1 `193.50.20.1`, fa0/2 `192.168.20.1`, pc5 `192.168.20.2`(default gateway of `192.168.20.1`)
+2. We need to assign the IP address in each multi layer switch, in order to do this we access the interface and run `no switchport`, this command puts the interface in "Layer 3" mode and makes it operate more like a router rather than a switch port, and then the regular `ip address` command, check the note above. In this example from left to right going one node by one node the the nodes will have the following IP addresses pc4 `192.168.10.2`(default gateway of `192.168.10.1`), fa0/2 `192.168.10.1`, fa0/1 `193.50.10.2`, fa0/1 `193.50.10.1`, fa0/2 `193.50.20.2`, fa0/1 `193.50.20.1`, fa0/2 `192.168.20.1`, pc5 `192.168.20.2`(default gateway of `192.168.20.1`)
 
 3. First always activate intervlan `ip routing`
 
