@@ -133,7 +133,7 @@ There is two types of protocols in dynamic routing
 2. **EGP**: These protocols are used when routing to an "external" autonomous system, that means it helps an autonomous system administrated by an entity communicate with another AS that logically belongs to another entity. An example of this protcols is **BGP**
 
 ### Dinamically route LANs
-When routing LANs we should use routers, switches doesnt require configurations in their terminal unless it is layer 3 switches.
+When routing LANs we should use routers, switches doesnt require configurations in their terminal unless it is layer 3 switches. in this case they ports has to set to act as routers using command **no switchport** and then assigning an IP address to each port that is connected to a network and then configure either **RIP**, **OSPF** or **EIGRP**
 
 #### Example Using RIP
 Routing information protocol is based on distance costs, it determines the best route to take depending depending on the jumps it has to make to reach its destination, a jump happens when it reaches a router and goes to the next, that is one jump.
