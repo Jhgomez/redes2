@@ -186,12 +186,14 @@ As you can tell it is possible to use any routing protocol in any context, meani
 
 4. configure access mode in the switch in connections between switch and PCs, only allow VLAN 10 in one side and only VLAN20 on the other switch access port
 
-5. configure trunk mode between switches, the only difference with switches of layer 2 is that switches of layer 2 has encapsulation mode dot1q already set up, but in layer 3 switches we have to start with setting that up with this command `switchport trunk encapsulation dot1q` and then jus the regular commands
+5. configure trunk mode between switches, the only difference with switches of layer 2 is that switches of layer 2 has encapsulation mode dot1q already set up, but in layer 3 switches we have to start with setting that up with this command `switchport trunk encapsulation dot1q` and then just the regular commands
 
-6. run `ip routing` to enable routing, configure ospf the routing protocol run `route ospf [proccessId]` and now register both all vlans in this network, remember this protocol stores all the map of all networks, run `network [networkAddress] [wildcard(negated subnetmask)] area [areaNumber]` the area number has to  be the same on any network registered inside the AS
+6. run `ip routing` to enable routing, configure ospf the routing protocol run `route ospf [proccessId]` and now register both all vlans in this network, remember this protocol stores all the map of all networks, run `network [networkAddress] [wildcard(negated subnetmask)] area [areaNumber]` the area number has to  be the same on any network registered inside the AS. Repeat on both switches
 
 #### Example using EIGRP
-I couldn't made setup this topology, so I need to confirm the steps to make it work. You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
+This setup is pretty much the same as the previous example right before this one, meaning we need to create vlans and assign ips to vlans and pcs as describred in the example right above this one, meaning follow the steps from 1-5. The example was taken from [here](./Lab/Clase6.pdf). and then replace step 6 with these instructions
+
+6.  run `ip routing` to enable routing, configure eigrp the routing protocol run `route eigrp [AS_Id]`, the AS id has to  be the same on any network registered inside AS,  and now register both all vlans in this network, remember this protocol stores all the map of all networks, run `network [networkAddress]`, note this protocol doesn't need a negated wildcard and lastly you can optionally run `no auto-autosummary`, without this command the networks from the switch interfaces would clasify its networks either as A, B or C to its neighboors. Repeat these on both switches
 
 1. First always activate intervlan `ip routing`
 
