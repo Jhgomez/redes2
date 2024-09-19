@@ -119,7 +119,7 @@ Here we are telling the router how to find an external network, that means the `
 
 5. If we need to connect from Router C to Router A but pass through Router B, you have to configure all ports you will say "all traffic sent to network A from network C first needs to be directed to port in Router B and all requests to network A received in router B needs to tavel to port in Router A"
 
-To configure RIP protocol follow this steps: 
+To configure RIP protocol follow these steps: 
 
 1. **router RIP**: this just enters RIP configurations context
 2. **net [router or network addreesss]**: add ip adresses of networks and routers
@@ -133,7 +133,7 @@ There is two types of protocols in dynamic routing
 2. **EGP**: These protocols are used when routing to an "external" autonomous system, that means it helps an autonomous system administrated by an entity communicate with another AS that logically belongs to another entity. An example of this protcols is **BGP**
 
 ### Dinamically route LANs
-When routing LANs we should use routers, switches doesnt require configurations in their terminal
+When routing LANs we should use routers, switches doesnt require configurations in their terminal unless it is layer 3 switches. in this case they ports has to set to act as routers using command **no switchport** and then assigning an IP address to each port that is connected to a network and then configure either **RIP**, **OSPF** or **EIGRPl**
 
 #### Example Using RIP
 Routing information protocol is based on distance costs, it determines the best route to take depending depending on the jumps it has to make to reach its destination, a jump happens when it reaches a router and goes to the next, that is one jump.
@@ -152,19 +152,12 @@ Instructions
 
 4. `show ip route`: Run it in **R1**, now you can se routes with an **R** label, in parenthesis you can se **(120/1)** this means it has less priority than static routes
 
-### Dinamically Route VLANs
-We have examples using EIGRP and OSPF [here](./Lab/Clase6.pdf). Note here we use multilayer switches which are layer 3 devices just like routers but routes are used when routing physical networks.
-
-It is important to activate intervlan communication, if using dynamic routing, before configuring any **IGP** protocol by using the following command
-* **`ip routing`**: run it in config mode
-
-
 #### Example Using OSPF
 You can see the topology [here](./Lab/Clase6.pdf). Note we don't need to configure trunk or access interfaces in layer 2 switches at all.   Use following commands:
 
 1. Configure PC IPs, the default gateway in each pc has to match the IP address we are going to assign to the port in the multi layer switch we have right on top of the PC
 
-2. We need to assign the IP address in each multi layer switch, in order to do this we access the interface and run `no switchport` and then the regular `ip address` command, check the note above. In this example from left to right going one node by one node the the nodes will have the following IP addresses pc4 `192.168.10.2`(default gateway of `192.168.10.1`), fa0/2 `192.168.10.1`, fa0/1 `193.50.10.2`, fa0/1 `193.50.10.1`, fa0/2 `193.50.20.2`, fa0/1 `193.50.20.1`, fa0/2 `192.168.20.1`, pc5 `192.168.20.2`(default gateway of `192.168.20.1`)
+2. We need to assign the IP address in each multi layer switch, in order to do this we access the interface and run `no switchport`, this command puts the interface in "Layer 3" mode and makes it operate more like a router rather than a switch port, and then the regular `ip address` command, check the note above. In this example from left to right going one node by one node the the nodes will have the following IP addresses pc4 `192.168.10.2`(default gateway of `192.168.10.1`), fa0/2 `192.168.10.1`, fa0/1 `193.50.10.2`, fa0/1 `193.50.10.1`, fa0/2 `193.50.20.2`, fa0/1 `193.50.20.1`, fa0/2 `192.168.20.1`, pc5 `192.168.20.2`(default gateway of `192.168.20.1`)
 
 3. First always activate intervlan `ip routing`
 
@@ -176,8 +169,31 @@ You can see the topology [here](./Lab/Clase6.pdf). Note we don't need to configu
 
 7. Repeat step 6 **on router 3**
 
+### Dinamically Route VLANs
+We have examples using EIGRP and OSPF [here](./Lab/Clase6.pdf). Note here we use multilayer switches which are layer 3 devices just like routers but routes are used when routing physical networks.
+
+It is important to activate intervlan communication, if using dynamic routing, before configuring any **IGP** protocol by using the following command if using layer 3 swqitches
+* **`ip routing`**: run it in config mode
+
+#### Example using OSPF
+As you can tell it is possible to use any routing protocol in any context, meaning they can be used either in LANs or VLANs, an example in LANs context was already documented, but now we are implementing the example [here](./Lab/Clase6.pdf) that uses OSPF with VLANS. Follow these steps
+
+1. Create vlans on both switches, VLAN10 and VLAN20
+
+2. Assign ip addresses on both computers. Pay attention to the default gateway, the following is an example, the switch on top of computer of VLAN10 will assign an ip address on the following step, the **VLAN10 in that switch** will act as the default gateway so this is the only IP address we need to make sure it matches, **it has to match the default gateway of the computer below it**, the other VLAN20 can have any ip address, this will work the same way on the other switch but there VLAN20 has to match with defaul gateway of computer below it
+
+3. Access the VLAN interface and assign an ip address and subnet mask
+
+4. configure access mode in the switch in connections between switch and PCs, only allow VLAN 10 in one side and only VLAN20 on the other switch access port
+
+5. configure trunk mode between switches, the only difference with switches of layer 2 is that switches of layer 2 has encapsulation mode dot1q already set up, but in layer 3 switches we have to start with setting that up with this command `switchport trunk encapsulation dot1q` and then just the regular commands
+
+6. run `ip routing` to enable routing, configure ospf the routing protocol run `route ospf [proccessId]` and now register both all vlans in this network, remember this protocol stores all the map of all networks, run `network [networkAddress] [wildcard(negated subnetmask)] area [areaNumber]` the area number has to  be the same on any network registered inside the AS. Repeat on both switches
+
 #### Example using EIGRP
-I couldn't made setup this topology, so I need to confirm the steps to make it work. You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
+This setup is pretty much the same as the previous example right before this one, meaning we need to create vlans and assign ips to vlans and pcs as describred in the example right above this one, meaning follow the steps from 1-5. The example was taken from [here](./Lab/Clase6.pdf). and then replace step 6 with these instructions
+
+6.  run `ip routing` to enable routing, configure eigrp the routing protocol run `route eigrp [AS_Id]`, the AS id has to  be the same on any network registered inside AS,  and now register both all vlans in this network, remember this protocol stores all the map of all networks, run `network [networkAddress]`, note this protocol doesn't need a negated wildcard and lastly you can optionally run `no auto-autosummary`, without this command the networks from the switch interfaces would clasify its networks either as A, B or C to its neighboors. Repeat these on both switches
 
 1. First always activate intervlan `ip routing`
 
