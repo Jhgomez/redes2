@@ -188,6 +188,8 @@ As you can tell it is possible to use any routing protocol in any context, meani
 
 5. configure trunk mode between switches, the only difference with switches of layer 2 is that switches of layer 2 has encapsulation mode dot1q already set up, but in layer 3 switches we have to start with setting that up with this command `switchport trunk encapsulation dot1q` and then jus the regular commands
 
+6. run `ip routing` to enable routing, configure ospf the routing protocol run `route ospf [proccessId]` and now register both all vlans in this network, remember this protocol stores all the map of all networks, run `network [networkAddress] [wildcard(negated subnetmask)] area [areaNumber]` the area number has to  be the same on any network registered inside the AS
+
 #### Example using EIGRP
 I couldn't made setup this topology, so I need to confirm the steps to make it work. You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
 
