@@ -179,8 +179,14 @@ It is important to activate intervlan communication, if using dynamic routing, b
 As you can tell it is possible to use any routing protocol in any context, meaning they can be used either in LANs or VLANs, an example in LANs context was already documented, but now we are implementing the example [here](./Lab/Clase6.pdf) that uses OSPF with VLANS. Follow these steps
 
 1. Create vlans on both switches, VLAN10 and VLAN20
-2. Assign ip addresses on both computers. Pay attention to the default gateway, the following is an example, the switch on top of computer of VLAN10 will assign an ip address on the following step, the VLAN10 in that switch will act as the default gateway so we this is the only IP address we need to make sure it matches, it has to match the default gateway in the computer below it, the other VLAN20 can have any ip address, this will work the same way on the other switch but there VLAN20 has to match with defaul gateway of computer below it
-3. Access the VLAN interface and assign an ip address and subnet mask, look the following point to see  
+
+2. Assign ip addresses on both computers. Pay attention to the default gateway, the following is an example, the switch on top of computer of VLAN10 will assign an ip address on the following step, the **VLAN10 in that switch** will act as the default gateway so this is the only IP address we need to make sure it matches, **it has to match the default gateway of the computer below it**, the other VLAN20 can have any ip address, this will work the same way on the other switch but there VLAN20 has to match with defaul gateway of computer below it
+
+3. Access the VLAN interface and assign an ip address and subnet mask
+
+4. configure access mode in the switch in connections between switch and PCs, only allow VLAN 10 in one side and only VLAN20 on the other switch access port
+
+5. configure trunk mode between switches, the only difference with switches of layer 2 is that switches of layer 2 has encapsulation mode dot1q already set up, but in layer 3 switches we have to start with setting that up with this command `switchport trunk encapsulation dot1q` and then jus the regular commands
 
 #### Example using EIGRP
 I couldn't made setup this topology, so I need to confirm the steps to make it work. You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
