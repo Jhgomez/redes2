@@ -152,13 +152,6 @@ Instructions
 
 4. `show ip route`: Run it in **R1**, now you can se routes with an **R** label, in parenthesis you can se **(120/1)** this means it has less priority than static routes
 
-### Dinamically Route VLANs
-We have examples using EIGRP and OSPF [here](./Lab/Clase6.pdf). Note here we use multilayer switches which are layer 3 devices just like routers but routes are used when routing physical networks.
-
-It is important to activate intervlan communication, if using dynamic routing, before configuring any **IGP** protocol by using the following command if using layer 3 swqitches
-* **`ip routing`**: run it in config mode
-
-
 #### Example Using OSPF
 You can see the topology [here](./Lab/Clase6.pdf). Note we don't need to configure trunk or access interfaces in layer 2 switches at all.   Use following commands:
 
@@ -175,6 +168,13 @@ You can see the topology [here](./Lab/Clase6.pdf). Note we don't need to configu
 6. Repeat steps 3-5 **on router 1**, `ip routing`, `router ospf 20`(different proccess number), `network 193.50.10.0 0.0.0.255 area 100`(same are), next network `network 193.50.20.0 0.0.0.255 area 100`(same area)
 
 7. Repeat step 6 **on router 3**
+
+### Dinamically Route VLANs
+We have examples using EIGRP and OSPF [here](./Lab/Clase6.pdf). Note here we use multilayer switches which are layer 3 devices just like routers but routes are used when routing physical networks.
+
+It is important to activate intervlan communication, if using dynamic routing, before configuring any **IGP** protocol by using the following command if using layer 3 swqitches
+* **`ip routing`**: run it in config mode
+
 
 #### Example using EIGRP
 I couldn't made setup this topology, so I need to confirm the steps to make it work. You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
