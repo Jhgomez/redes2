@@ -209,3 +209,7 @@ This setup is pretty much the same as the previous example right before this one
 
 * `show ip interface`: it runs in privileged mode. It gets a detailed listing of all the IP-related characteristics of an interface, either a router or switch, etc.
 
+## Ethernet Channel - PAGP/LACP
+This two protocols allows us to create ethernet channels easily. Ethernet channels are a logical group of physical connections that will be treated as a single logical connection.
+
+
