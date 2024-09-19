@@ -210,6 +210,19 @@ This setup is pretty much the same as the previous example right before this one
 * `show ip interface`: it runs in privileged mode. It gets a detailed listing of all the IP-related characteristics of an interface, either a router or switch, etc.
 
 ## Ethernet Channel - PAGP/LACP
-This two protocols allows us to create ethernet channels easily. Ethernet channels are a logical group of physical connections that will be treated as a single logical connection.
+This two protocols allows us to create ethernet channels easily. Ethernet channels are a logical group of physical connections that will be treated as a single logical connection. These two protocols are used between switch to switch to group two or more ethernet connections to be treated as a single connection
 
+### LACP
+Has two modes `active` or `passive`, passive to passive connections don't work, all other combinations do. One switch has one mode and the other has the other mode. Usefull when working with different brands switches as is a standar protocol
 
+### PAGP
+Does exactly the same as LACP but is pattented by Cisco. Has two modes `desirable` and `auto`
+
+### Commands
+Configure them using following commands:
+
+1. Select range `interface range [type(fa/gb)] [range(example: 0/1-4)]`
+2. Select protocol `channel-protocol pagp/lacp`
+3. Select group and mode, you can create groups only from 1-6.  For LACP `channel-group [1-6] mode [active/passive]`, for PAGP `channel-group [1-6] mode [dessirable/auto]`
+
+you can then display the setup with: `show etherchannel summary` 
