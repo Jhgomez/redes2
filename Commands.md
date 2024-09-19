@@ -175,6 +175,10 @@ We have examples using EIGRP and OSPF [here](./Lab/Clase6.pdf). Note here we use
 It is important to activate intervlan communication, if using dynamic routing, before configuring any **IGP** protocol by using the following command if using layer 3 swqitches
 * **`ip routing`**: run it in config mode
 
+#### Example using OSPF
+As you can tell it is possible to use any routing protocol in any context, meaning they can be used either in LANs or VLANs, an example in LANs context was already documented, but now we are implementing the example [here](./Lab/Clase6.pdf) that uses OSPF with VLANS. Follow these steps
+
+
 
 #### Example using EIGRP
 I couldn't made setup this topology, so I need to confirm the steps to make it work. You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
