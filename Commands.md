@@ -46,7 +46,7 @@ configuration mode it depends on the version of paket tracer
 
 * **Configure stp mode**: Spannig tree protocol helps our network stay bucle free meaning it helps the network find the best route to a node of the network, cisco switches has STP(PVST) configured by default wich is slower than RSTP(RPVST). in configuration mode run **spannig-tree mode pvst|rapid-pvst**
 
-* **configure security in ports**: Switches are consider a weak point in all networks since the ports can be reached physically, to mitigate this vulnerabillity you can run set restrictions to your ports using this commands: firsta access the port you want to secure, second configure the connection as an access connection **switchport mode access**, then **switchport port-security aging|mac-address|maximum|violation**
+* **configure security in ports**: Switches are consider a weak point in all networks since the ports can be reached physically, to mitigate this vulnerabillity you can run set restrictions to your ports using this commands: first access the port you want to secure, second configure the connection as an access connection **switchport mode access**, then **switchport port-security aging|mac-address|maximum|violation**. The ports can not be dynamic meaning the auto negotiation has to be turned off, in some switches just definining switchport mode to either trunk or access is enough but in others defining trunk mode is doesn't turn off auto negotiation so you have to also set **switchport nonegotate** to be able to run this configurations
 
 * **show spannig-tree**: you can identify the root switch in a spanning tree procotol network using this command, only the root switch will display something indicating it is the root, you can attach de word **summary** to this command to get another version of the info. Visually the root switch will have all its connections enabled
 
@@ -55,6 +55,8 @@ configuration mode it depends on the version of paket tracer
 * **encapsulation**: When an ethernet frame travels through a vlan the switches(layer 2) don't know what vlan it belogns to so that is why have to configure one of two protocols in the switchport, either **802.1Q or ISL** beign the former the most common and is the default in some switches, in switches you can configure this using the command **switchport trunk encapsulation dot1q|isl** (dot1q for 802.1Q) and then **swictchport mode trunk**, note that if the encapsulation is set to auto or dynamic you can not configure the trunk mode. You can also configure encapsulation in subinterface of a **router(layer 3)** to be able to communicate between vlans(4 computers, 2 vlans,  connected to one swtich and the switch connected to a router) this protocol will help redirect a vlans trafic to another vlan if pinning a computer outside the origin vlan, run the commands in the router `interface fastEthernet 0/0.1`, `encapsulation dot1Q [vlanID] [navitve](this keyboard is optional as opposed to vlanId)`, **ip address [ipAddress] [subnetmask]**, the IP address doesn't have to match to an IP address of a copmuter connected to the VLAN but it could match the gateway of these of the client computers and the subnet mask doesnt have to match either
 
 * **switchport trunk native vlan [vlanId]**: This command changes the native vlan which is usually set to vlan 1
+
+* **spannin-tree mode pvst|rapid-pvst**: Run it in conf mode. This lets you set the spanning-tree protocol(STP) to either normal(pvst) or rapid(rapid-pvst), convergence time is faster when reconfiguring the network using RSTP. You can check what mode of the protocol is configures either with **show running-config** or **show spainning-tree summary**, with the later option you can find out whether a switch is the root of the tree
 
 note that some of the configurations done by the previous commands like setting passwords at login and at access to config mode can be automated using a manager that will deoploy these configurations through an image 
 
@@ -117,7 +119,7 @@ Here we are telling the router how to find an external network, that means the `
 
 5. If we need to connect from Router C to Router A but pass through Router B, you have to configure all ports you will say "all traffic sent to network A from network C first needs to be directed to port in Router B and all requests to network A received in router B needs to tavel to port in Router A"
 
-To configure RIP protocol follow this steps: 
+To configure RIP protocol follow these steps: 
 
 1. **router RIP**: this just enters RIP configurations context
 2. **net [router or network addreesss]**: add ip adresses of networks and routers
@@ -131,7 +133,7 @@ There is two types of protocols in dynamic routing
 2. **EGP**: These protocols are used when routing to an "external" autonomous system, that means it helps an autonomous system administrated by an entity communicate with another AS that logically belongs to another entity. An example of this protcols is **BGP**
 
 ### Dinamically route LANs
-When routing LANs we should use routers, switches doesnt require configurations in their terminal
+When routing LANs we should use routers, switches doesnt require configurations in their terminal unless it is layer 3 switches. in this case they ports has to set to act as routers using command **no switchport** and then assigning an IP address to each port that is connected to a network and then configure either **RIP**, **OSPF** or **EIGRPl**
 
 #### Example Using RIP
 Routing information protocol is based on distance costs, it determines the best route to take depending depending on the jumps it has to make to reach its destination, a jump happens when it reaches a router and goes to the next, that is one jump.
@@ -150,19 +152,12 @@ Instructions
 
 4. `show ip route`: Run it in **R1**, now you can se routes with an **R** label, in parenthesis you can se **(120/1)** this means it has less priority than static routes
 
-### Dinamically Route VLANs
-We have examples using EIGRP and OSPF [here](./Lab/Clase6.pdf). Note here we use multilayer switches which are layer 3 devices just like routers but routes are used when routing physical networks.
-
-It is important to activate intervlan communication, if using dynamic routing, before configuring any **IGP** protocol by using the following command
-* **`ip routing`**: run it in config mode
-
-
 #### Example Using OSPF
 You can see the topology [here](./Lab/Clase6.pdf). Note we don't need to configure trunk or access interfaces in layer 2 switches at all.   Use following commands:
 
 1. Configure PC IPs, the default gateway in each pc has to match the IP address we are going to assign to the port in the multi layer switch we have right on top of the PC
 
-2. We need to assign the IP address in each multi layer switch, in order to do this we access the interface and run `no switchport` and then the regular `ip address` command, check the note above. In this example from left to right going one node by one node the the nodes will have the following IP addresses pc4 `192.168.10.2`(default gateway of `192.168.10.1`), fa0/2 `192.168.10.1`, fa0/1 `193.50.10.2`, fa0/1 `193.50.10.1`, fa0/2 `193.50.20.2`, fa0/1 `193.50.20.1`, fa0/2 `192.168.20.1`, pc5 `192.168.20.2`(default gateway of `192.168.20.1`)
+2. We need to assign the IP address in each multi layer switch, in order to do this we access the interface and run `no switchport`, this command puts the interface in "Layer 3" mode and makes it operate more like a router rather than a switch port, and then the regular `ip address` command, check the note above. In this example from left to right going one node by one node the the nodes will have the following IP addresses pc4 `192.168.10.2`(default gateway of `192.168.10.1`), fa0/2 `192.168.10.1`, fa0/1 `193.50.10.2`, fa0/1 `193.50.10.1`, fa0/2 `193.50.20.2`, fa0/1 `193.50.20.1`, fa0/2 `192.168.20.1`, pc5 `192.168.20.2`(default gateway of `192.168.20.1`)
 
 3. First always activate intervlan `ip routing`
 
@@ -174,8 +169,31 @@ You can see the topology [here](./Lab/Clase6.pdf). Note we don't need to configu
 
 7. Repeat step 6 **on router 3**
 
+### Dinamically Route VLANs
+We have examples using EIGRP and OSPF [here](./Lab/Clase6.pdf). Note here we use multilayer switches which are layer 3 devices just like routers but routes are used when routing physical networks.
+
+It is important to activate intervlan communication, if using dynamic routing, before configuring any **IGP** protocol by using the following command if using layer 3 swqitches
+* **`ip routing`**: run it in config mode
+
+#### Example using OSPF
+As you can tell it is possible to use any routing protocol in any context, meaning they can be used either in LANs or VLANs, an example in LANs context was already documented, but now we are implementing the example [here](./Lab/Clase6.pdf) that uses OSPF with VLANS. Follow these steps
+
+1. Create vlans on both switches, VLAN10 and VLAN20
+
+2. Assign ip addresses on both computers. Pay attention to the default gateway, the following is an example, the switch on top of computer of VLAN10 will assign an ip address on the following step, the **VLAN10 in that switch** will act as the default gateway so this is the only IP address we need to make sure it matches, **it has to match the default gateway of the computer below it**, the other VLAN20 can have any ip address, this will work the same way on the other switch but there VLAN20 has to match with defaul gateway of computer below it
+
+3. Access the VLAN interface and assign an ip address and subnet mask
+
+4. configure access mode in the switch in connections between switch and PCs, only allow VLAN 10 in one side and only VLAN20 on the other switch access port
+
+5. configure trunk mode between switches, the only difference with switches of layer 2 is that switches of layer 2 has encapsulation mode dot1q already set up, but in layer 3 switches we have to start with setting that up with this command `switchport trunk encapsulation dot1q` and then just the regular commands
+
+6. run `ip routing` to enable routing, configure ospf the routing protocol run `route ospf [proccessId]` and now register both all vlans in this network, remember this protocol stores all the map of all networks, run `network [networkAddress] [wildcard(negated subnetmask)] area [areaNumber]` the area number has to  be the same on any network registered inside the AS. Repeat on both switches
+
 #### Example using EIGRP
-I couldn't made setup this topology, so I need to confirm the steps to make it work. You can see the topology [here](./Lab/Clase6.pdf). Use following commands:
+This setup is pretty much the same as the previous example right before this one, meaning we need to create vlans and assign ips to vlans and pcs as describred in the example right above this one, meaning follow the steps from 1-5. The example was taken from [here](./Lab/Clase6.pdf). and then replace step 6 with these instructions
+
+6.  run `ip routing` to enable routing, configure eigrp the routing protocol run `route eigrp [AS_Id]`, the AS id has to  be the same on any network registered inside AS,  and now register both all vlans in this network, remember this protocol stores all the map of all networks, run `network [networkAddress]`, note this protocol doesn't need a negated wildcard and lastly you can optionally run `no auto-autosummary`, without this command the networks from the switch interfaces would clasify its networks either as A, B or C to its neighboors. Repeat these on both switches
 
 1. First always activate intervlan `ip routing`
 
@@ -191,3 +209,20 @@ I couldn't made setup this topology, so I need to confirm the steps to make it w
 
 * `show ip interface`: it runs in privileged mode. It gets a detailed listing of all the IP-related characteristics of an interface, either a router or switch, etc.
 
+## Ethernet Channel - PAGP/LACP
+This two protocols allows us to create ethernet channels easily. Ethernet channels are a logical group of physical connections that will be treated as a single logical connection. These two protocols are used between switch to switch to group two or more ethernet connections to be treated as a single connection
+
+### LACP
+Has two modes `active` or `passive`, passive to passive connections don't work, all other combinations do. One switch has one mode and the other has the other mode. Usefull when working with different brands switches as is a standar protocol
+
+### PAGP
+Does exactly the same as LACP but is pattented by Cisco. Has two modes `desirable` and `auto`
+
+### Commands
+Configure them using following commands:
+
+1. Select range `interface range [type(fa/gb)] [range(example: 0/1-4)]`
+2. Select protocol `channel-protocol pagp/lacp`
+3. Select group and mode, you can create groups only from 1-6.  For LACP `channel-group [1-6] mode [active/passive]`, for PAGP `channel-group [1-6] mode [dessirable/auto]`
+
+you can then display the setup with: `show etherchannel summary` 
