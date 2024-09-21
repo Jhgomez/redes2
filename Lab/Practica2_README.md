@@ -1,4 +1,4 @@
-Pasos para configurar
+pasos para configurar
 
 ### Crear VLANs en Switches
 
