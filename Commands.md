@@ -205,9 +205,15 @@ This setup is pretty much the same as the previous example right before this one
 
 ## Show Commands
 
-* `show ip route`: this command can run from privileged mode, it shows the current state of the routing table on a router. This is prefered when checking routes for example when working with RIP protocol
+* `show ip route`: shows RIP, EIGRP, OSPF networks. This command can run from privileged mode, it shows the current state of the routing table on a router. This is prefered when checking routes for example when working with RIP protocol
 
 * `show ip interface`: it runs in privileged mode. It gets a detailed listing of all the IP-related characteristics of an interface, either a router or switch, etc.
+
+* `sh vtp status`
+
+* `sh vlan brief`
+
+* `sh interfaces trunk`
 
 ## Ethernet Channel - PAGP/LACP
 This two protocols allows us to create ethernet channels easily. Ethernet channels are a logical group of physical connections that will be treated as a single logical connection. These two protocols are used between switch to switch to group two or more ethernet connections to be treated as a single connection
@@ -267,3 +273,8 @@ select protocol `channel-protocol pagp/lacp`, select group and mode, you can cre
 from 1-6. For LACP `channel-group 1 mode active
 
 2. enable vlan routing on multilayer switches in the center with `ip routing`, they will act as routers
+
+3. configure vtp. MS1 will be the server `vtp mode server`, `vtp version`, `vtp domain juan`, `vtp password juan`
+
+
+
