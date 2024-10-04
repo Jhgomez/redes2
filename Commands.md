@@ -239,3 +239,7 @@ DHCP protocol helps us simplify the proccess of connecting devices and managing 
 4. we will use RIP to share other networks so in R1 do `router rip`, `version 2`, `network 192.168.1.224`,`network 192.168.10.0`, `network 192.168.20.0`
 
 5. now configure access connections in sw1, `int fa 0/1`, `sw access vlan 10`, `int fa 0/11`, `sw access vlan 20`
+
+6. configure trunk connction in sw3, `int g 0/1`, `sw mode trunk`, check it with `sh interfaces trunk`
+
+7. check the PC0 and PC4 are working, go to 'IP configuration' section and select 'DHCP' on both computers and you will see an ip corresponding to the right vlan assigned to the computer
