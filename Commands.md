@@ -255,3 +255,5 @@ DHCP protocol helps us simplify the proccess of connecting devices and managing 
 10.  RIP to share other networks so in R2 do `router rip`, `version 2`, `network 192.168.1.224`,`network 192.168.30.0`, `network 192.168.40.0`
 
 11. make sure router to router and router to switch connections are up, no need configure any protoocol in this type of connections
+
+12. be aware vtp is layer 2 and it doesn't work through layer 3 devices, this means we need to create another vtp server in sw4
