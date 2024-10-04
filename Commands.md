@@ -243,3 +243,5 @@ DHCP protocol helps us simplify the proccess of connecting devices and managing 
 6. configure trunk connction in sw3, `int g 0/1`, `sw mode trunk`, check it with `sh interfaces trunk`
 
 7. check the PC0 and PC4 are working, go to 'IP configuration' section and select 'DHCP' on both computers and you will see an ip corresponding to the right vlan assigned to the computer
+
+8. configure R2 basically same proccess as R1(step 1,2, 3 and 4). `int gi 0/1.30`, `encapsulation dot1q 30`, set the vlan30 gateway in this interface `ip address 192.168.30.1 255.255.255.0`. `no shutdown`. `int gi 0/1.40`, `encapsulation dot1q 40`, set the vlan30 gateway in this interface `ip address 192.168.40.1 255.255.255.0`. `no shutdown`, check configuration with `sh ip interfaces brief`
