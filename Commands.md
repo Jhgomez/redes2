@@ -274,7 +274,7 @@ from 1-6. For LACP `channel-group 1 mode active
 
 2. enable vlan routing on multilayer switches in the center with `ip routing`, they will act as routers
 
-3. configure vtp. MS1 will be the server `vtp mode server`, `vtp version`, `vtp domain juan`, `vtp password juan`
+3. configure vtp. MS1 will be the server `vtp mode server`, `vtp version`, `vtp domain juan`, `vtp password juan`. configure the rest of switches layer 2 and 3 as clients `vtp mode client`, `vtp domain juan`, `vtp password juan`
 
 
 
