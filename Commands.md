@@ -88,7 +88,7 @@ This example is more complex because:
 
 * Remember the interface between router to switch and switch to swith has to be a **trunk** connection while switch to computer has to be an **access** connection, this is only configured in switches
 
-* **(IMPORTANT)** Next we configured sub-interfaces in router, first access the sub-interface `interface fastEthernet 0/0.1`. Second, we define the vlan we allow`encapsulation dot1Q [vlanID] [navitve](this keyboard is optional as opposed to vlanId)`. Third, we assign an ip address `ip address [ipAddress] [subnetmask]` and here note that the ip address has to be the same as the default gateway used in the computers inside the vlan we are routing here.
+* **(IMPORTANT)** Next we configured sub-interfaces in router, first access the sub-interface `interface fastEthernet 0/0.1`. Second, we define the vlan we allow`encapsulation dot1Q [vlanID] [navitve]("native" keyboard is optional as opposed to vlanId)`. Third, we assign an ip address `ip address [ipAddress] [subnetmask]` and here note that the ip address has to be the same as the default gateway used in the computers inside the vlan we are routing here.
 
 ### Statically route LANs
 Read the [Instructions](./Clase/Practica4_B_LANRuteoEstatico.pdf)
@@ -230,4 +230,4 @@ you can then display the setup with: `show etherchannel summary`
 ### Configure DHCP
 DHCP protocol helps us simplify the proccess of connecting devices and managing network resources by providing IP addresses and other configuration parameters automatically. We are using the topology created [here](./Clase/practica6_no_tiene_instrucciones_ver_commands.pkt), in this exercise we are configuring the DHCP service in router 
 
-1. Since we are configuring VLANs in this example we have to configure the the subinterfaces just like in the router-on-a-stick example in the static routing examples
+1. Since we are configuring VLANs in this example we have to configure the the subinterfaces just like in the router-on-a-stick example in the static routing examples(complex example). So enter SW1 and access gigabitEthernet 0/1 and access sub interface .10 `int gi 0/1.10`, `encapsulation dot1q 10`, set the vlan10 gateway in this interface `ip address 192.168.10.1 255.255.255.0`. do the same with vlan 20 `int gi 0/1.20`, `encapsulation dot1q 20`, set the vlan10 gateway in this interface `ip address 192.168.20.1 255.255.255.0`. turn them up `no shutdown`
