@@ -227,7 +227,7 @@ Configure them using following commands:
 
 you can then display the setup with: `show etherchannel summary` 
 
-### Configure DHCP
+## Configure DHCP
 DHCP protocol helps us simplify the proccess of connecting devices and managing network resources by providing IP addresses and other configuration parameters automatically. We are using the topology created [here](./Clase/practica6_no_tiene_instrucciones_ver_commands.pkt), in this exercise we are configuring the DHCP service in router 
 
 0. Be aware that switch to switch connections has to be set to trunk, switch to router has to be trunk, router to switch just make sure is up, router to router just make sure is up, and switch to computer has to be access mode
@@ -259,3 +259,9 @@ DHCP protocol helps us simplify the proccess of connecting devices and managing 
 12. be aware vtp is layer 2 and it doesn't work through layer 3 devices, this means we need to create another vtp server in sw4, vtp domain and password is same, usac
 
 14. Go to 'IP configuration' section and select 'DHCP' on all right side computers and you will see an ip corresponding to the right vlan assigned to the computer
+
+## Configure Proyecto 1
+
+1. configure LACP in MS 1, 2, 3 and 7, add a power supply to 3650 switches. `interface range [type(fa/gb)] [range(example: 0/1-4)]`, 
+select protocol `channel-protocol pagp/lacp`, select group and mode, you can create groups only 
+from 1-6. For LACP `channel-group [1-6] mode [active/passive]`, for PAGP `channel-group [1-6] mode [dessirable/auto]`
