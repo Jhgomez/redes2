@@ -88,7 +88,7 @@ This example is more complex because:
 
 * Remember the interface between router to switch and switch to swith has to be a **trunk** connection while switch to computer has to be an **access** connection, this is only configured in switches
 
-* **(IMPORTANT)** Next we configured sub-interfaces in router, first access the sub-interface `interface fastEthernet 0/0.1`. Second, we define the vlan we allow`encapsulation dot1Q [vlanID] [navitve](this keyboard is optional as opposed to vlanId)`. Third, we assign an ip address `ip address [ipAddress] [subnetmask]` and here note that the ip address has to be the same as the default gateway used in the computers inside the vlan we are routing here.
+* **(IMPORTANT)** Next we configured sub-interfaces in router, first access the sub-interface `interface fastEthernet 0/0.1`. Second, we define the vlan we allow`encapsulation dot1Q [vlanID] [navitve]("native" keyboard is optional as opposed to vlanId)`. Third, we assign an ip address `ip address [ipAddress] [subnetmask]` and here note that the ip address has to be the same as the default gateway used in the computers inside the vlan we are routing here.
 
 ### Statically route LANs
 Read the [Instructions](./Clase/Practica4_B_LANRuteoEstatico.pdf)
@@ -226,3 +226,36 @@ Configure them using following commands:
 3. Select group and mode, you can create groups only from 1-6.  For LACP `channel-group [1-6] mode [active/passive]`, for PAGP `channel-group [1-6] mode [dessirable/auto]`
 
 you can then display the setup with: `show etherchannel summary` 
+
+### Configure DHCP
+DHCP protocol helps us simplify the proccess of connecting devices and managing network resources by providing IP addresses and other configuration parameters automatically. We are using the topology created [here](./Clase/practica6_no_tiene_instrucciones_ver_commands.pkt), in this exercise we are configuring the DHCP service in router 
+
+0. Be aware that switch to switch connections has to be set to trunk, switch to router has to be trunk, router to switch just make sure is up, router to router just make sure is up, and switch to computer has to be access mode
+
+1. Since we are configuring VLANs in this example we have to configure the the subinterfaces just like in the router-on-a-stick example in the static routing examples(complex example), this is done to route vlans. So enter SW1 and access gigabitEthernet 0/1 and access sub interface .10 `int gi 0/1.10`, `encapsulation dot1q 10`, set the vlan10 gateway in this interface `ip address 192.168.10.1 255.255.255.0`. do the same with vlan 20 `int gi 0/1.20`, `encapsulation dot1q 20`, set the vlan10 gateway in this interface `ip address 192.168.20.1 255.255.255.0`. turn them up `no shutdown`, check configuration with `sh ip interfaces brief`
+
+2. configure DHCP, in configuration mode run `ip dhcp pool [vlanId]`(vlanId = vlan10/vlan20) set the defaul router(it has to be the same as the default gateway for the vlan) `default-router 192.168.10.1`, set the network we are serving with this pool `network 192.168.10.0 255.255.255.0` and in case we want to set up a dns server do `dns-sercver 192.168.10.5`. Do the same for vlan20 `ip dhcp pool [vlanId]`, `default-router 192.168.20.1`, `network 192.168.20.0 255.255.255.0`, `dns-sercver 192.168.20.5`. After setting them up exclude some ip addresses in configuration mode with `ip dhcp excluded-address 192.168.10.1 192.168.10.2 192.168.10.5 192.168.20.1 192.168.20.2 192.168.20.5`, note we are exlcuding the defaul gateway and the dns server ip address. Note that is not necessary to create a dns server for each vlan, we can acuatlly use the same for all, which is the most common thing to do. We could have a server vlan and using rip protocol we could allow all vlans to communicate with a network that is network only for servers and DNS would be added to that newtwork for example a dns with ip 192.168.100.5
+
+3. configure seral port in R1 `int serial 0/1/0`, `ip address 192.168.1.225 255.255.255.252`, `no shutdown`
+
+4. we will use RIP to share other networks so in R1 do `router rip`, `version 2`, `network 192.168.1.224`,`network 192.168.10.0`, `network 192.168.20.0`
+
+5. now configure access connections in sw1, `int fa 0/1`, `sw access vlan 10`, `int fa 0/11`, `sw access vlan 20`
+
+6. configure trunk connction in sw3, `int g 0/1`, `sw mode trunk`, check it with `sh interfaces trunk`
+
+7. check the PC0 and PC4 are working, go to 'IP configuration' section and select 'DHCP' on both computers and you will see an ip corresponding to the right vlan assigned to the computer
+
+8. Here we are configuring vlans statically. Configure R2 basically same proccess as R1(step 1,2, 3 and 4). `int gi 0/1.30`, `encapsulation dot1q 30`, set the vlan30 gateway in this interface `ip address 192.168.30.1 255.255.255.0`. `no shutdown`. `int gi 0/1.40`, `encapsulation dot1q 40`, set the vlan30 gateway in this interface `ip address 192.168.40.1 255.255.255.0`. `no shutdown`, check configuration with `sh ip interfaces brief`
+
+9. configure DHCP.  Vlan30 `ip dhcp pool vlan30`, `default-router 192.168.30.1`(same as vlan default gateway), `network 192.168.30.0 255.255.255.0`, `dns-sercver 192.168.30.5`. Vlan40 `ip dhcp pool vlan40`, `default-router 192.168.40.1`(same as vlan default gateway), `network 192.168.40.0 255.255.255.0`, `dns-sercver 192.168.40.5`. After setting them up exclude some ip addresses in configuration mode with `ip dhcp excluded-address 192.168.30.1 192.168.30.2 192.168.30.5` `ip dhcp excluded-address 192.168.40.1 192.168.40.2 192.168.40.5`, note we are exlcuding the defaul gateway and the dns server ip address
+
+3. configure seral port in R2 `int serial 0/1/0`, `ip address 192.168.1.226 255.255.255.252`, `no shutdown`
+
+10.  RIP to share other networks so in R2 do `router rip`, `version 2`, `network 192.168.1.224`,`network 192.168.30.0`, `network 192.168.40.0`
+
+11. make sure router to router and router to switch connections are up, no need configure any protoocol in this type of connections
+
+12. be aware vtp is layer 2 and it doesn't work through layer 3 devices, this means we need to create another vtp server in sw4, vtp domain and password is same, usac
+
+14. Go to 'IP configuration' section and select 'DHCP' on all right side computers and you will see an ip corresponding to the right vlan assigned to the computer
