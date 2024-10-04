@@ -230,7 +230,7 @@ you can then display the setup with: `show etherchannel summary`
 ### Configure DHCP
 DHCP protocol helps us simplify the proccess of connecting devices and managing network resources by providing IP addresses and other configuration parameters automatically. We are using the topology created [here](./Clase/practica6_no_tiene_instrucciones_ver_commands.pkt), in this exercise we are configuring the DHCP service in router 
 
-1. Since we are configuring VLANs in this example we have to configure the the subinterfaces just like in the router-on-a-stick example in the static routing examples(complex example), this is done to route vlans. So enter SW1 and access gigabitEthernet 0/1 and access sub interface .10 `int gi 0/1.10`, `encapsulation dot1q 10`, set the vlan10 gateway in this interface `ip address 192.168.10.1 255.255.255.0`. do the same with vlan 20 `int gi 0/1.20`, `encapsulation dot1q 20`, set the vlan10 gateway in this interface `ip address 192.168.20.1 255.255.255.0`. turn them up `no shutdown`
+1. Since we are configuring VLANs in this example we have to configure the the subinterfaces just like in the router-on-a-stick example in the static routing examples(complex example), this is done to route vlans. So enter SW1 and access gigabitEthernet 0/1 and access sub interface .10 `int gi 0/1.10`, `encapsulation dot1q 10`, set the vlan10 gateway in this interface `ip address 192.168.10.1 255.255.255.0`. do the same with vlan 20 `int gi 0/1.20`, `encapsulation dot1q 20`, set the vlan10 gateway in this interface `ip address 192.168.20.1 255.255.255.0`. turn them up `no shutdown`, check configuration with `sh ip interfaces brief`
 
 2. configure DHCP, in configuration mode run `ip dhcp pool [vlanId]`(vlanId = vlan10/vlan20) set the defaul router(it has to be the same as the default gateway for the vlan) `default-router 192.168.10.1`, set the network we are serving with this pool `network 192.168.10.0 255.255.255.0` and in case we want to set up a dns server do `dns-sercver 192.168.10.5`. Do the same for vlan20 `ip dhcp pool [vlanId]`, `default-router 192.168.20.1`, `network 192.168.20.0 255.255.255.0`, `dns-sercver 192.168.20.5`. After setting them up exclude some ip addresses in configuration mode with `ip dhcp excluded-address 192.168.10.1 192.168.10.2 192.168.10.5 192.168.20.1 192.168.20.2 192.168.20.5`, note we are exlcuding the defaul gateway and the dns server ip address
 
@@ -238,4 +238,4 @@ DHCP protocol helps us simplify the proccess of connecting devices and managing 
 
 4. we will use RIP to share other networks so in R1 do `router rip`, `version 2`, `network 192.168.1.224`,`network 192.168.10.0`, `network 192.168.20.0`
 
-5. now configure sw1 access connections, `int fa 0/1`, `sw access vlan 10`, `int fa 0/11`, `sw access vlan 20`
+5. now configure access connections in sw1, `int fa 0/1`, `sw access vlan 10`, `int fa 0/11`, `sw access vlan 20`
