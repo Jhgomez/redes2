@@ -256,4 +256,4 @@ DHCP protocol helps us simplify the proccess of connecting devices and managing 
 
 11. make sure router to router and router to switch connections are up, no need configure any protoocol in this type of connections
 
-12. be aware vtp is layer 2 and it doesn't work through layer 3 devices, this means we need to create another vtp server in sw4
+12. be aware vtp is layer 2 and it doesn't work through layer 3 devices, this means we need to create another vtp server in sw4, vtp domain and password is same, usac
