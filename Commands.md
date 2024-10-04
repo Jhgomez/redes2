@@ -264,4 +264,6 @@ DHCP protocol helps us simplify the proccess of connecting devices and managing 
 
 1. configure LACP in MS 1, 2, 3 and 7, add a power supply to 3650 switches. `interface range [type(fa/gb)] [range(example: 0/1-4)]`, 
 select protocol `channel-protocol pagp/lacp`, select group and mode, you can create groups only 
-from 1-6. For LACP `channel-group 1 mode active`
+from 1-6. For LACP `channel-group 1 mode active
+
+2. enable vlan routing on multilayer switches in the center with `ip routing`, they will act as routers
