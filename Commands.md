@@ -276,5 +276,5 @@ from 1-6. For LACP `channel-group 1 mode active
 
 3. configure vtp. MS1 will be the server `vtp mode server`, `vtp version`, `vtp domain juan`, `vtp password juan`. configure the rest of switches layer 2 and 3 as clients `vtp mode client`, `vtp domain juan`, `vtp password juan`
 
-
-
+4. configure trunk connections between switches, 3650 multilayer switches already has dot1q mode set up so on this switches for port channels do `int port-channel 1`, `sw mode trunk`, `sw trunk allowed vlan 10,20`, just access the right interface `int gi 0/#` and do the same. For 3560 multiplayer switches encapsulation is not set so we need to set it, basically is the same commands we noted in this step already but after accessing the interface run `sw trunk encapsulation dot1q`
+(not sure if its safe but trunk connections are set up between the switches in the middle, they represent different buildings)
