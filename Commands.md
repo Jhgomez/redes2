@@ -226,3 +226,8 @@ Configure them using following commands:
 3. Select group and mode, you can create groups only from 1-6.  For LACP `channel-group [1-6] mode [active/passive]`, for PAGP `channel-group [1-6] mode [dessirable/auto]`
 
 you can then display the setup with: `show etherchannel summary` 
+
+### Configure DHCP
+DHCP protocol helps us simplify the proccess of connecting devices and managing network resources by providing IP addresses and other configuration parameters automatically. We are using the topology created [here](./Clase/practica6_no_tiene_instrucciones_ver_commands.pkt), in this exercise we are configuring the DHCP service in router 
+
+1. Since we are configuring VLANs in this example we have to configure the the subinterfaces just like in the router-on-a-stick example in the static routing examples
