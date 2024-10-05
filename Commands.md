@@ -215,6 +215,8 @@ This setup is pretty much the same as the previous example right before this one
 
 * `sh interfaces trunk`
 
+* `sh ethernetchannel summary`: shows channels configured with LACP or PAGP
+
 ## Ethernet Channel - PAGP/LACP
 This two protocols allows us to create ethernet channels easily. Ethernet channels are a logical group of physical connections that will be treated as a single logical connection. These two protocols are used between switch to switch to group two or more ethernet connections to be treated as a single connection
 
