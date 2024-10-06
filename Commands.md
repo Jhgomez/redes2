@@ -294,8 +294,6 @@ from 1-6. For LACP `channel-group 1 mode active
 ### HSRP(Just a quick note)
 This is a "redundancy" protocol for stablishing a fault-tolerant default gateway. If configuring LANs just take the pair of routers/switches that will be used to simulate a single virtual router
 
-8. This step is a "continuation" of step 7 in the sense it is only perfomred in the same switches as in prev step. We will configure the HSRP protocol. MS4 will be the active and MS5 will be passive, on MS4 do `standby [id(we'll use vlanId in this case)] ip []
-
 ## Remember
 Routers and Layer three switches can route VLANs and LANs, in this document you will find examples with all of these scenarios but we are putting them together in this section
 
