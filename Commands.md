@@ -219,6 +219,8 @@ This setup is pretty much the same as the previous example right before this one
 
 * `sh eigrp/ospf/rip neighbors`
 
+* `sh ip interface brief`: shows vlans, fa, gi, and other ports or interface that has been assigned an IP address
+
 ## Ethernet Channel - PAGP/LACP
 This two protocols allows us to create ethernet channels easily. Ethernet channels are a logical group of physical connections that will be treated as a single logical connection. These two protocols are used between switch to switch to group two or more ethernet connections to be treated as a single connection
 
@@ -295,4 +297,8 @@ This is a "redundancy" protocol for stablishing a fault-tolerant default gateway
 8. This step is a "continuation" of step 7 in the sense it is only perfomred in the same switches. We will configure the HSRP protocol. 
 
 ## Remember
-1. routing VLANs and LANs is possible with layer 3 switches and routers. This switches can route 
+Routers and Layer three switches can route VLANs and LANs, in this document you will find examples with all of these scenarios but we are putting them together in this section
+
+1. Routing vlans with routers, here you have to do subinterface routing access the so for example access a gigabitethernet port in a router which should be connected to a switch and do something similar to this `int g0/1.10`(the subinterface can .20, .30, etc), `encapsulation dot1q [vlan#]`, set the vlan gateway in this interface `ip address [gatewayIp] [subnetmask]`, `no shutdown`. This process should be done with all routers so they can route any network that is directly connected to it, usually is connected through a layer 2 switch, this should be enough after this you just have to configure static or dynamic routing and trunk and access connections as needed in switches, a good example is "Configure DHCP" example
+
+2. 
