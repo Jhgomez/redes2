@@ -217,6 +217,8 @@ This setup is pretty much the same as the previous example right before this one
 
 * `sh ethernetchannel summary`: shows channels configured with LACP or PAGP
 
+* `sh eigrp/ospf/rip neighbors`
+
 ## Ethernet Channel - PAGP/LACP
 This two protocols allows us to create ethernet channels easily. Ethernet channels are a logical group of physical connections that will be treated as a single logical connection. These two protocols are used between switch to switch to group two or more ethernet connections to be treated as a single connection
 
@@ -283,3 +285,14 @@ from 1-6. For LACP `channel-group 1 mode active
 
 5. configure access connections between layer 2 switches and computers, `int fa0/#`, `sw mode access`, `sw access vlan [vlan#]`
 
+6. hsrp access the first multilayer switch interface that will be treated as default gateway and do `standby [anId(a random ID, must commonly vlan# is used)] ip [vlanGatewayIpAddress]`. Set the priority, note that the switch with the highest priority will be the active node and the one with lowest priority will be passive, `standby [the id we configured in prev step] priority [a number, default priority is 100]`, `standby [id] preempt` this last command is only run on the active node, this helps us to keep this 'registered' as the active router in the case where this switch fails for some reason and it comes back up it will continue being the active router, therefore this last command should only be runned on active switch. Remember to access the second multilayer switch interface that will act as the gateway in conjuction with the first we configured and just run the first command and the second if needed(you can keep default priority value)
+
+7. configure vlans with an ip number, we'll use the left side multilayer switches just as an example, we only need to assign ip addresses to vlans in MS4 and MS5. On MS4 do `int vlan 10`, `ip address 192.168.5.2 255.255.255.192`, `int vlan 20`, `ip address 192.168.5.66 255.225.255.192`. On MS5 `int vlan 10`, `ip address 192.168.5.3 255.255.255.192`, `int vlan 20`, `ip address 192.168.5.67 255.225.255.192`
+
+### HSRP(Just a quick note)
+This is a "redundancy" protocol for stablishing a fault-tolerant default gateway. If configuring LANs just take the pair of routers/switches that will be used to simulate a single virtual router
+
+8. This step is a "continuation" of step 7 in the sense it is only perfomred in the same switches. We will configure the HSRP protocol. 
+
+## Remember
+1. routing VLANs and LANs is possible with layer 3 switches and routers. This switches can route 
