@@ -140,7 +140,7 @@ Routing information protocol is based on distance costs, it determines the best 
 
 We use this protocol to announce all networks, that means inform all connected routers about the networks that are connected to this autonomus system(AS)
 
-In this example we were given a [base topology](./Clase/Practica5_base_topology.pkt) 
+In this example we were given a [base topology](./Clase/Practica5_no_guide_base_topology.pkt) 
 
 Instructions
 
@@ -301,4 +301,8 @@ Routers and Layer three switches can route VLANs and LANs, in this document you 
 
 1. Routing vlans with routers, here you have to do subinterface routing access the so for example access a gigabitethernet port in a router which should be connected to a switch and do something similar to this `int g0/1.10`(the subinterface can .20, .30, etc), `encapsulation dot1q [vlan#]`, set the vlan gateway in this interface `ip address [gatewayIp] [subnetmask]`, `no shutdown`. This process should be done with all routers so they can route any network that is directly connected to it, usually is connected through a layer 2 switch, this should be enough after this you just have to configure static or dynamic routing and trunk and access connections as needed in switches, a good example is "Configure DHCP" example
 
-2. 
+2. Routing valns with layer 3 switches, a good example is the [this](./Lab/practica2EIGRP.pkt) the instructions are [here](./Lab/Practica2_README.md), basically you have to, again, configure access and trunk connections but this time since this is switches connecting different buildings we have to do a trunk connection between different buildings multilayer switches which are doing the routing using an ethernet channel, the vlans in the routers that are doing the routing in each building has to assing an ip address to the vlan just like in "1." instructions, do `int vlan [vlan#]`, `ip address [vlanDefaultGateway] [subnetMask]`, default gateway should be the same default gateway in computers inside the vlan we want to route, this switch could have a lot of configurations below but the would only configure trunk or access mode as needed. sw to sw is trunk, sw to computer is access. The different buildings are connected with an ethernetchannel, in here we will do something that we do when configuring LANS which is assignig an ip address to the channel that connects to the other building multilayer switches basically configure LACP, do a `no switchport` so it acts as a routing port and we can assign an IP address which is what is similar to what we do when routing LANs assign an IP address to this channel. Then with eigrp you have to announce all the networks it is connected to, the networks below, above, right and left
+
+3. Routing LANs with routers, router interfaces can assign different ip for different subinterfaces only with vlans but with physical networks a single port can only be one gateway as opossed with vlans, so this is all you need to be aware
+
+4. Routing LANS with switches, is the same story(only one LAN per switchport) as the prev number("3.") with the only difference that we need to enable routing `no switchport` to the interface, in this insturctions and the previouse("3.") we would assign an ip address to the interface that connects with the network, then we can connect several routers using static or dynamic routing by adding an ip address(same network) to each side of a router meaning we would use different ip addresses on the same network and then configure the routing protocol
