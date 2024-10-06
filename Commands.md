@@ -278,7 +278,7 @@ DHCP protocol helps us simplify the proccess of connecting devices and managing 
 select protocol `channel-protocol pagp/lacp`, select group and mode, you can create groups only 
 from 1-6. For LACP `channel-group 1 mode active
 
-2. enable vlan routing on multilayer switches in the center with `ip routing`, they will act as routers, only in ms1 and ms2
+2. enable vlan routing on multilayer switches in the center with `ip routing`, they will act as routers, only in ms1 and ms2, ms3, ms4, ms5
 
 3. configure vtp. MS1 will be the server `vtp mode server`, `vtp version`, `vtp domain juan`, `vtp password juan`. configure the rest of switches layer 2 and 3 as clients but leave ms0 and ms11 alone as they are not actually working with vlans directly. Do `vtp mode client`, `vtp domain juan`, `vtp password juan`
 
@@ -287,14 +287,14 @@ from 1-6. For LACP `channel-group 1 mode active
 
 5. configure access connections between layer 2 switches and computers, `int fa0/#`, `sw mode access`, `sw access vlan [vlan#]`
 
-6. hsrp access the first multilayer switch interface that will be treated as default gateway and do `standby [anId(a random ID, must commonly vlan# is used)] ip [vlanGatewayIpAddress]`. Set the priority, note that the switch with the highest priority will be the active node and the one with lowest priority will be passive, `standby [the id we configured in prev step] priority [a number, default priority is 100]`, `standby [id] preempt` this last command is only run on the active node, this helps us to keep this 'registered' as the active router in the case where this switch fails for some reason and it comes back up it will continue being the active router, therefore this last command should only be runned on active switch. Remember to access the second multilayer switch interface that will act as the gateway in conjuction with the first we configured and just run the first command and the second if needed(you can keep default priority value)
+6. Configure hsrp, we will configure only left side MS4 and MS5 for now, MS4 is the active and MS5 will be the passive node. first access MS4 interface that will be treated as default gateway `int gi0/3` do `standby [anId(a random ID, must commonly vlan# is used)] ip [vlanGatewayIpAddress]`. Set the priority, note that the switch with the highest priority will be the active node and the one with lowest priority will be passive, `standby [the id we configured in prev step] priority [a number, default priority is 100]`, `standby [id] preempt` this last command is only run on the active node, this helps us to keep this 'registered' as the active router in the case where this switch fails for some reason and it comes back up it will continue being the active router, therefore this last command should only be runned on active switch. Remember to access the second multilayer switch interface that will act as the gateway in conjuction with the first we configured and just run the first command and the second if needed(you can keep default priority value), repeat the all the vlans that exists in this network and then do the same for MS5
 
 7. configure vlans with an ip number, we'll use the left side multilayer switches just as an example, we only need to assign ip addresses to vlans in MS4 and MS5. On MS4 do `int vlan 10`, `ip address 192.168.5.2 255.255.255.192`, `int vlan 20`, `ip address 192.168.5.66 255.225.255.192`. On MS5 `int vlan 10`, `ip address 192.168.5.3 255.255.255.192`, `int vlan 20`, `ip address 192.168.5.67 255.225.255.192`
 
 ### HSRP(Just a quick note)
 This is a "redundancy" protocol for stablishing a fault-tolerant default gateway. If configuring LANs just take the pair of routers/switches that will be used to simulate a single virtual router
 
-8. This step is a "continuation" of step 7 in the sense it is only perfomred in the same switches. We will configure the HSRP protocol. 
+8. This step is a "continuation" of step 7 in the sense it is only perfomred in the same switches as in prev step. We will configure the HSRP protocol. MS4 will be the active and MS5 will be passive, on MS4 do `standby [id(we'll use vlanId in this case)] ip []
 
 ## Remember
 Routers and Layer three switches can route VLANs and LANs, in this document you will find examples with all of these scenarios but we are putting them together in this section
