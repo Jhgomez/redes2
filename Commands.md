@@ -217,7 +217,7 @@ This setup is pretty much the same as the previous example right before this one
 
 * `sh ethernetchannel summary`: shows channels configured with LACP or PAGP
 
-* `sh eigrp/ospf/rip neighbors`
+* `sh ip eigrp/ospf/rip neighbors`
 
 * `sh ip interface brief`: shows vlans, fa, gi, and other ports or interface that has been assigned an IP address
 
@@ -278,8 +278,6 @@ DHCP protocol helps us simplify the proccess of connecting devices and managing 
 select protocol `channel-protocol pagp/lacp`, select group and mode, you can create groups only 
 from 1-6. For LACP `channel-group 1 mode active
 
-2. enable vlan routing on multilayer switches in the center with `ip routing`, they will act as routers, only in ms1 and ms2, ms3, ms4, ms5
-
 3. configure vtp. MS1 will be the server `vtp mode server`, `vtp version`, `vtp domain juan`, `vtp password juan`. configure the rest of switches layer 2 and 3 as clients but leave ms0 and ms11 alone as they are not actually working with vlans directly. Do `vtp mode client`, `vtp domain juan`, `vtp password juan`
 
 4. configure trunk connections between switches, don't do this for connections between ms0 and other switches as well as ms11 and other switiches, 3650 multilayer switches already has dot1q mode set up so on this switches for port channels do `int port-channel 1`, `sw mode trunk`, `sw trunk allowed vlan 10,20`, just access the right interface `int gi 0/#` and do the same. For 3560 multiplayer switches encapsulation is not set so we need to set it, basically is the same commands we noted in this step already but after accessing the interface run `sw trunk encapsulation dot1q`
@@ -287,12 +285,19 @@ from 1-6. For LACP `channel-group 1 mode active
 
 5. configure access connections between layer 2 switches and computers, `int fa0/#`, `sw mode access`, `sw access vlan [vlan#]`
 
-6. Configure hsrp, we will configure only left side MS4 and MS5 for now, MS4 is the active and MS5 will be the passive node. first access MS4 interface that will be treated as default gateway `int gi0/3` do `standby [anId(a random ID, must commonly vlan# is used)] ip [vlanGatewayIpAddress]`. Set the priority, note that the switch with the highest priority will be the active node and the one with lowest priority will be passive, `standby [the id we configured in prev step] priority [a number, default priority is 100]`, `standby [id] preempt` this last command is only run on the active node, this helps us to keep this 'registered' as the active router in the case where this switch fails for some reason and it comes back up it will continue being the active router, therefore this last command should only be runned on active switch. Remember to access the second multilayer switch interface that will act as the gateway in conjuction with the first we configured and just run the first command and the second if needed(you can keep default priority value), repeat the all the vlans that exists in this network and then do the same for MS5
-
-7. configure vlans with an ip number, we'll use the left side multilayer switches just as an example, we only need to assign ip addresses to vlans in MS4 and MS5. On MS4 do `int vlan 10`, `ip address 192.168.5.2 255.255.255.192`, `int vlan 20`, `ip address 192.168.5.66 255.225.255.192`. On MS5 `int vlan 10`, `ip address 192.168.5.3 255.255.255.192`, `int vlan 20`, `ip address 192.168.5.67 255.225.255.192`
-
 ### HSRP(Just a quick note)
 This is a "redundancy" protocol for stablishing a fault-tolerant default gateway. If configuring LANs just take the pair of routers/switches that will be used to simulate a single virtual router
+
+
+6. This is the routing/distribution layer. Configure HSRP, we will configure only left side MS4 and MS5 for now, MS4 is the active and MS5 will be the passive node. first access MS4 interface that will be treated as default gateway `int gi0/3` do `standby [anId(a random ID, must commonly vlan# is used)] ip [vlanGatewayIpAddress]`. Set the priority, note that the switch with the highest priority will be the active node and the one with lowest priority will be passive, `standby [the id we configured in prev step] priority [a number, default priority is 100]`, `standby [id] preempt` this last command is only run on the active node, this helps us to keep this 'registered' as the active router in the case where this switch fails for some reason and it comes back up it will continue being the active router, therefore this last command should only be runned on active switch. Remember to access the second multilayer switch interface that will act as the gateway in conjuction with the first we configured and just run the first command and the second if needed(you can keep default priority value), repeat the all the vlans that exists in this network and then do the same for MS5
+
+7. This is the left side routing layer(MS4 and MS5). Configure vlans with an ip number, we'll use the left side multilayer switches just as an example, we only need to assign ip addresses to vlans in MS4 and MS5. On MS4 do `int vlan 10`, `ip address 192.168.5.2 255.255.255.192`, `int vlan 20`, `ip address 192.168.5.66 255.225.255.192`. On MS5 `int vlan 10`, `ip address 192.168.5.3 255.255.255.192`, `int vlan 20`, `ip address 192.168.5.67 255.225.255.192`
+
+8. Configure layer 3 switches that are acting as routers(SW0, SW1, SW2, SW3, SW7 and SW11), all of them could be considered the core layer however SW0 and SW11 are "special" since SW0 is helping route the servers providing DCHP ip addresses to all other nodes so this is acting as a router and a switch at the same time as well as SW0 which contains the network hosting the website. So basically on all of them you have to assign the ip address indicated in the topology, firts just access the interface observed in the topology, then you have to tell the switch to use this port with with a router's port functionallity `no switchport`, the just assign the ip address `ip address [ipAddress] [subnetMask]`
+
+8. enable vlan routing on multilayer switches ms3, ms4, ms5 with `ip routing`, they will act as routers
+
+8. This step is basically about configuring the Core layer or basically the border between the distribution and core layer. Assign an ip address on ports connecting to and from MS3, MS4 and MS5, check the ip addresses, they are implemented as indicated in topology just remember first access the interface, then do `no switchport` so the por can be treated as router, then asign the assign the ip address indicated in topology
 
 ## Remember
 Routers and Layer three switches can route VLANs and LANs, in this document you will find examples with all of these scenarios but we are putting them together in this section
