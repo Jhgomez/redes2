@@ -295,7 +295,7 @@ This is a "redundancy" protocol for stablishing a fault-tolerant default gateway
 
 8. Configure layer 3 switches that are acting as routers(SW0, SW1, SW2, SW3, SW7 and SW11), all of them could be considered the core layer however SW0 and SW11 are "special" since SW0 is helping route the servers providing DCHP ip addresses to all other nodes so this is acting as a router and a switch at the same time as well as SW0 which contains the network hosting the website. So basically on all of them you have to assign the ip address indicated in the topology, firts just access the interface observed in the topology, then you have to tell the switch to use this port with with a router's port functionallity `no switchport`, the just assign the ip address `ip address [ipAddress] [subnetMask]`
 
-8. enable vlan routing on multilayer switches ms3, ms4, ms5 with `ip routing`, they will act as routers
+9. Configure EIGRP on all routing and core layer swithches(SW0, SW1, SW2, SW3, SW4, SW5, SW7, SW8, SW9 and SW11), firts enable dyamic VLAN routing `ip routing` then check whats the networks connected to the switch with `sh ip routing`, take note of all networks labeled with a letter "C", set EIGRP `router eigrp [subnet#(we'll use subnet 100 for all)]`, now run `network [networkIpAddress] [negatedSubnetMask]` for each network with the "C" label 
 
 8. This step is basically about configuring the Core layer or basically the border between the distribution and core layer. Assign an ip address on ports connecting to and from MS3, MS4 and MS5, check the ip addresses, they are implemented as indicated in topology just remember first access the interface, then do `no switchport` so the por can be treated as router, then asign the assign the ip address indicated in topology
 
