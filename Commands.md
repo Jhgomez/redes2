@@ -329,9 +329,11 @@ This is a "redundancy" protocol for stablishing a fault-tolerant default gateway
 
     * First go the "Desktop" tab and go to "IP Configuration", IP address will be "170.0.3.254", subnet mask "255.255.255.0", default gateway "170.0.3.1", DNS server will be same as ip address "170.0.3.254"
 
-    * 
+    * access MS11 interface connected to this server do `no sw`, `ip address  170.0.3.1 255.255.255.0` ip address has to be the same default gateway configured in prev step, and now add it to EIGRP table just like we did in prev steps `router eigrp 100`, `network 170.0.5.0 0.0.0.255` 
 
-    * On the "Services" tab check what service we don't need that can be turned off like the email service then turn up "DNS" service. enter the name of how you want to call your website, I used "proj.yo", the address has to be the same address as the ip address and server name as in prev step
+    * On the "Services" tab check what service we don't need that can be turned off like the email service then turn up "DNS" service. enter the name of how you want to call your website, I used "proj.yo", the address has to be the same address as the ip address and server name as in prev step "170.0.3.254", select "a record". Save it
+
+19. // TODO, configure ACLs on routing layer switches
 
 ## Remember
 Routers and Layer three switches can route VLANs and LANs, in this document you will find examples with all of these scenarios but we are putting them together in this section
