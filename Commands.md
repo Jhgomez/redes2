@@ -299,15 +299,17 @@ This is a "redundancy" protocol for stablishing a fault-tolerant default gateway
 
 10. Configure EIGRP on all routing and core layer swithches(MS0, MS1, MS2, MS3, MS4, MS5, MS7, MS8, MS9 and MS11), firts enable dyamic VLAN routing `ip routing` then check whats the networks connected to the switch with `sh ip routing`, take note of all networks labeled with a letter "C", set EIGRP `router eigrp [subnet#(we'll use subnet 100 for all)]`, now run `network [networkIpAddress] [negatedSubnetMask]` for each network with the "C" label
 
-11. Do the same as in step 8, but on switches MS8 and MS9. Basically assigning an ip to the ports that will be used for EIGRP and configure EIGRP at the same time
+11. make sure step 4 and 5 is also configured on right side. Basically configure trunk and access connections.
 
-12. Do the same as step 7, but on MS8 and MS9. basically we are assigning ips to vlan in these switches, on MS8 do `int vlan 10`, `ip address 192.168.5.194 255.255.255.192`, `int vlan 20`, `ip address 192.168.5.130 255.225.255.192`. On MS9 `int vlan 10`, `ip address 192.168.5.195 255.255.255.192`, `int vlan 20`, `ip address 192.168.5.131 255.225.255.192`. 
+12. Do the same as in step 8, but on switches MS8 and MS9. Basically assigning an ip to the ports that will be used for EIGRP and configure EIGRP at the same time
 
-14. make sure step 4 and 5 is also configured on right side. Basically configure trunk and access connections.
+13. Do the same as step 7, but on MS8 and MS9. basically we are assigning ips to vlan in these switches, on MS8 do `int vlan 10`, `ip address 192.168.5.194 255.255.255.192`, `int vlan 20`, `ip address 192.168.5.130 255.225.255.192`. On MS9 `int vlan 10`, `ip address 192.168.5.195 255.255.255.192`, `int vlan 20`, `ip address 192.168.5.131 255.225.255.192`. 
 
-13. Do the same as in step 6 but on right side switches MS8 and MS9. Configure HSRP. MS8 will be active and MS9 will be passive.
+14. Do the same as in step 6 but on right side switches MS8 and MS9. Configure HSRP. MS8 will be active and MS9 will be passive.
 
-8. This step is basically about configuring the Core layer or basically the border between the distribution and core layer. Assign an ip address on ports connecting to and from MS3, MS4 and MS5, check the ip addresses, they are implemented as indicated in topology just remember first access the interface, then do `no switchport` so the por can be treated as router, then asign the assign the ip address indicated in topology
+15. (Probably and error) I had to set a direct connection between MS1 and MS2 and add it to eigrp, meaning first set an IP address to interfaces and then set eigrp
+
+16. I had an error with EIGRP configurations, since I'm using a subneted network with the vlans and pcs it is recommended to run `no auto-summary` to avoid null networks. For example, in our case we have two subnets on the left and two subnets on the right. this is a problem because since the four subnets are divided EIGRP will register the "missing" subnets ip addresses as null and automatically whenever something tries to send it will just fail, if we run this command EIGRP will be able to learn the other subnets are in this network and add them
 
 ## Remember
 Routers and Layer three switches can route VLANs and LANs, in this document you will find examples with all of these scenarios but we are putting them together in this section
