@@ -327,7 +327,10 @@ This is a "redundancy" protocol for stablishing a fault-tolerant default gateway
 
 18. Configure webssite on SERVER WEB, basically server web will configure a DNS service so we can host a website in this server
 
+    * First go the "Desktop" tab and go to "IP Configuration", IP address will be "170.0.3.254", subnet mask "255.255.255.0", default gateway "170.0.3.1", DNS server will be same as ip address "170.0.3.254"
+
     * 
+
     * On the "Services" tab check what service we don't need that can be turned off like the email service then turn up "DNS" service. enter the name of how you want to call your website, I used "proj.yo", the address has to be the same address as the ip address and server name as in prev step
 
 ## Remember
