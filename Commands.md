@@ -311,6 +311,18 @@ This is a "redundancy" protocol for stablishing a fault-tolerant default gateway
 
 16. I had an error with EIGRP configurations, since I'm using a subneted network with the vlans and pcs it is recommended to run `no auto-summary` to avoid null networks. For example, in our case we have two subnets on the left and two subnets on the right. this is a problem because since the four subnets are divided EIGRP will register the "missing" subnets ip addresses as null and automatically whenever something tries to send it will just fail, if we run this command EIGRP will be able to learn the other subnets are in this network and add them
 
+17. Configure DHCP. It was required that for DHCP there is two servers at the top, the left side server provides ip addresses for left side of topology and right side to right side. We are going to configure the left side server to have an example. Just as a note DHCP works by sending a broadcast at the beginning, this is what is known as "DHCP discover", again it is just a broadcast
+
+    * assign IP address to the server in the "dektop" tab go to "IP Configuration", ip address will be "170.0.1.254", subnet mask "255.255.255.0", default gateway "170.0.1.1"
+
+    * Assign ip addresses to the MS0 interface that is connected to the DHCP server as indicated in topology, note that the ip address assigned to this interface will be the default-gateway of the server it is connected to. `int g1/0/3`, `no switchport`, `ip address 170.0.1.1 255.255.255.0`
+
+    * Enter the server and activate DHCP in the "services" tab
+
+    * Add a pool for each vlan, just set value to "pool Name" put VLAN10. "dafault gateway", in this case it is always the first ip address in the network in this case it is 192.168.5.1 with subnet 255.255.255.192, star ip address will always be the second available ip address so in this cas it is 192.168.5.2, repeat same process for VLAN20, 192.168.5.65, 255.255.255.192, 192.168.5.66
+
+    * If VLAN node that is being provided a dynamic IP is connected directly through a router or layer 3 switch we would just have to access the interface that is connected to the DHCP server and run command `ip helper-address [ipOfDHCPServer]` but in this example since we are using vlans in different buildings and that means they are not connected directly first we need to add the network address the server is connected to to the EIGRP table `router eigrp 100`, `network 170.0.1.254 0.0.0.255`
+
 ## Remember
 Routers and Layer three switches can route VLANs and LANs, in this document you will find examples with all of these scenarios but we are putting them together in this section
 
