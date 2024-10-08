@@ -323,6 +323,13 @@ This is a "redundancy" protocol for stablishing a fault-tolerant default gateway
 
     * If VLAN node that is being provided a dynamic IP is connected directly through a router or layer 3 switch we would just have to access the interface that is connected to the DHCP server and run command `ip helper-address [ipOfDHCPServer]` but in this example since we are using vlans in different buildings and that means they are not connected directly first we need to add the network address the server is connected to to the EIGRP table `router eigrp 100`, `network 170.0.1.254 0.0.0.255`, after this you have to go to the routing layer multilayer switches MS4 and MS5 and access the vlan interface and run `ip helper-address 170.0.1.254`, and this is done for both vlans on both switches
 
+    * Turn DCHP on end devices(computers)
+
+18. Configure webssite on SERVER WEB, basically server web will configure a DNS service so we can host a website in this server
+
+    * 
+    * On the "Services" tab check what service we don't need that can be turned off like the email service then turn up "DNS" service. enter the name of how you want to call your website, I used "proj.yo", the address has to be the same address as the ip address and server name as in prev step
+
 ## Remember
 Routers and Layer three switches can route VLANs and LANs, in this document you will find examples with all of these scenarios but we are putting them together in this section
 
