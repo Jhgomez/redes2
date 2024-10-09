@@ -520,3 +520,27 @@ no ip access-group ACL_RECURSOS <in/out (depende de como se creo la lista de acc
 ```bash
 do show etherchannel summary
 ```
+
+
+
+
+
+
+
+1. configure LACP in MS 1, 2, 3 and 7, add a power supply to 3650 switches. `interface range [type(f/g)] [range(example: 0/1-4)]`, select protocol `channel-protocol pagp/lacp`, select group and mode, you can create groups only 
+from 1-6. For LACP `channel-group 1 mode active`
+
+3. configure vtp. We will have two servers on each side, only access and routing layer cares about VLANs, the core layer doesn't configure any VLAN set up, but also be aware "vtp" protocol can not travel throuhg layer 3 devices, such as swichports acting as routers or a router itself, that is why we will have two servers, one on each side. MS6 on the left side and MS10 on the right side. `vtp mode server`, `vtp version 2`, `vtp domain juan`, `vtp password juan`. Now we will configure the clients on each side. Left side clients are MS4, MS5, SW0 and S1. Right side clients are MS8, MS9, SW2 and SW3. Do `vtp mode client`, `vtp domain juan`, `vtp password juan`
+
+4. Create vlans on server switches MS6 and MS10. `vlan 10`, `name orange`, `vlan 20`, `name green`
+
+5. 
+
+
+
+
+
+
+
+
+
