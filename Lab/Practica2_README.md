@@ -534,7 +534,9 @@ from 1-6. For LACP `channel-group 1 mode active`
 
 4. Create vlans on server switches MS6 and MS10. `vlan 10`, `name orange`, `vlan 20`, `name green`
 
-5. 
+5. Configure Access connections. This is only done in layer 2 switches interfaces connected to end devices and they are considered the Access layer. On the left side access layer is SW0 and SW1, on ports connected to end devices run `int fa0/#`, `sw mode access`, `sw access vlan [vlan#]`
+
+6. Configure trunk connections. This is done in connections between access and routing layer, and withing the routing layer itself. Access layer on the left side is represented by end devices and the connections between 
 
 
 
