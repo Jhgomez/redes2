@@ -534,9 +534,14 @@ from 1-6. For LACP `channel-group 1 mode active`
 
 4. Create vlans on server switches MS6 and MS10. `vlan 10`, `name orange`, `vlan 20`, `name green`
 
-5. Configure Access connections. This is only done in layer 2 switches interfaces connected to end devices and they are considered the Access layer. On the left side access layer is SW0 and SW1, on ports connected to end devices run `int fa0/#`, `sw mode access`, `sw access vlan [vlan#]`
+5. Configure Access connections. This is only done in layer 2 switches interfaces connected to end devices and they are considered the Access layer. On the left side access layer is SW0 and SW1, on the right side is SW2 and SW3. On ports connected to end devices run `int fa0/#`, `sw mode access`, `sw access vlan [vlan#]`
 
-6. Configure trunk connections. This is done in connections between access and routing layer, and withing the routing layer itself. Access layer on the left side is represented by end devices and the connections between 
+6. Configure trunk connections. This is done in connections between access and routing layer as well as within the routing layer itself. Routing layer on the left side is the ports in MS4, MS5 and MS6 connected between each other and to access layer switches as well as the ports in switches of access layer(SW0 and SW1) that are connected to routing layer switches, we find the same "pattern" on the right side with access layer swit, ches(SW2 and SW3) ports connected to routing layer switches(MS8, MS9, MS10) as well as connections withing them. Run `int fa0/#`(you can select a range instead of an interface at a time), `sw trunk encapsulation dot1q`, `sw mode truk`, `sw trunk allowed vlan 10,20`.
+
+### HSRP(Just a quick note)
+This is a "redundancy" protocol for stablishing a fault-tolerant default gateway. If configuring LANs just take the pair of routers/switches that will be used to simulate a single virtual router
+
+7. Configure VLANS, at the same time we will configure HSRP. We will assign an ip address to the vlans in 
 
 
 
