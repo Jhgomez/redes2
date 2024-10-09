@@ -2,9 +2,9 @@
 The following is a list of commands used when configuring different nodes in the network
 
 ## Switches
-* **enable**: previous to configurations
+* **enable | en**: previous to configurations
 
-* **conf | configure ter | configure terminal**: either should work to enter 
+* **conf t | configure ter | configure terminal**: either should work to enter 
 configuration mode it depends on the version of paket tracer
 
 * **hostname**: defines a name to the switch
@@ -140,7 +140,7 @@ Routing information protocol is based on distance costs, it determines the best 
 
 We use this protocol to announce all networks, that means inform all connected routers about the networks that are connected to this autonomus system(AS)
 
-In this example we were given a [base topology](./Clase/Practica5_base_topology.pkt) 
+In this example we were given a [base topology](./Clase/Practica5_no_guide_base_topology.pkt) 
 
 Instructions
 
@@ -205,9 +205,21 @@ This setup is pretty much the same as the previous example right before this one
 
 ## Show Commands
 
-* `show ip route`: this command can run from privileged mode, it shows the current state of the routing table on a router. This is prefered when checking routes for example when working with RIP protocol
+* `show ip route`: shows RIP, EIGRP, OSPF networks. This command can run from privileged mode, it shows the current state of the routing table on a router. This is prefered when checking routes for example when working with RIP protocol
 
 * `show ip interface`: it runs in privileged mode. It gets a detailed listing of all the IP-related characteristics of an interface, either a router or switch, etc.
+
+* `sh vtp status`
+
+* `sh vlan brief`
+
+* `sh interfaces trunk`
+
+* `sh ethernetchannel summary`: shows channels configured with LACP or PAGP
+
+* `sh ip eigrp/ospf/rip neighbors`
+
+* `sh ip interface brief`: shows vlans, fa, gi, and other ports or interface that has been assigned an IP address
 
 ## Ethernet Channel - PAGP/LACP
 This two protocols allows us to create ethernet channels easily. Ethernet channels are a logical group of physical connections that will be treated as a single logical connection. These two protocols are used between switch to switch to group two or more ethernet connections to be treated as a single connection
@@ -227,7 +239,7 @@ Configure them using following commands:
 
 you can then display the setup with: `show etherchannel summary` 
 
-### Configure DHCP
+## Configure DHCP
 DHCP protocol helps us simplify the proccess of connecting devices and managing network resources by providing IP addresses and other configuration parameters automatically. We are using the topology created [here](./Clase/practica6_no_tiene_instrucciones_ver_commands.pkt), in this exercise we are configuring the DHCP service in router 
 
 0. Be aware that switch to switch connections has to be set to trunk, switch to router has to be trunk, router to switch just make sure is up, router to router just make sure is up, and switch to computer has to be access mode
@@ -259,3 +271,87 @@ DHCP protocol helps us simplify the proccess of connecting devices and managing 
 12. be aware vtp is layer 2 and it doesn't work through layer 3 devices, this means we need to create another vtp server in sw4, vtp domain and password is same, usac
 
 14. Go to 'IP configuration' section and select 'DHCP' on all right side computers and you will see an ip corresponding to the right vlan assigned to the computer
+
+## Configure Proyecto 1
+
+1. configure LACP in MS 1, 2, 3 and 7, add a power supply to 3650 switches. `interface range [type(f/g)] [range(example: 0/1-4)]`, select protocol `channel-protocol pagp/lacp`, select group and mode, you can create groups only 
+from 1-6. For LACP `channel-group 1 mode active`
+
+3. configure vtp. We will have two servers on each side, only access and routing layer cares about VLANs, the core layer doesn't configure any VLAN set up, but also be aware "vtp" protocol can not travel throuhg layer 3 devices, such as swichports acting as routers or a router itself, that is why we will have two servers, one on each side. MS6 on the left side and MS10 on the right side. `vtp mode server`, `vtp version 2`, `vtp domain juan`, `vtp password juan`. Now we will configure the clients on each side. Left side clients are MS4, MS5, SW0 and S1. Right side clients are MS8, MS9, SW2 and SW3. Do `vtp mode client`, `vtp domain juan`, `vtp password juan`
+
+4. Create vlans on server switches MS6 and MS10. `vlan 10`, `name orange`, `vlan 20`, `name green`
+
+5. Configure Access connections. This is only done in layer 2 switches interfaces connected to end devices and they are considered the Access layer. On the left side access layer is SW0 and SW1, on the right side is SW2 and SW3. On ports connected to end devices run `int fa0/#`, `sw mode access`, `sw access vlan [vlan#]`
+
+6. Configure trunk connections. This is done in connections between access and routing layer as well as within the routing layer itself. Routing layer on the left side is the ports in MS4, MS5 and MS6 connected between each other and to access layer switches as well as the ports in switches of access layer(SW0 and SW1) that are connected to routing layer switches, we find the same "pattern" on the right side with access layer swit, ches(SW2 and SW3) ports connected to routing layer switches(MS8, MS9, MS10) as well as connections withing them. Run `int fa0/#`(you can select a range instead of an interface at a time), `sw trunk encapsulation dot1q`, `sw mode truk`, `sw trunk allowed vlan 10,20`.
+
+7. Configure webssite on SERVER WEB, basically server web will configure a DNS service so we can host a website in this server
+
+    * First go the "Desktop" tab and go to "IP Configuration", IP address will be "150.0.3.254", subnet mask "255.255.255.0", default gateway "150.0.3.1".
+
+    * On the "Services" tab check what service we don't need that can be turned off like the email service then turn up "DNS" service. enter the name of how you want to call your website, I used "pro.com", the "address" has to be the same address as the ip address in prev step "150.0.3.254", select "a record". Save it
+
+### HSRP(Just a quick note)
+This is a "redundancy" protocol for stablishing a fault-tolerant default gateway. If configuring LANs just take the pair of routers/switches that will be used to simulate a single virtual router
+
+8. Configure DHCP. It was required that for DHCP there is two servers at the top, the left side server provides ip addresses for left side of topology and right side to right side. Just as a note DHCP works by sending a broadcast at the beginning, this is what is known as "DHCP discover", again it is just a broadcast
+
+    * assign IP address to the server in the "desktop" tab go to "IP Configuration", DHCP1 ip address will be "170.0.1.254", subnet mask "255.255.255.0", default gateway "170.0.1.1". DHCP2 "180.0.2.254", subnet mask "255.255.255.0", default gateway "180.0.2.1"
+
+    * Enter the server and activate DHCP in the "services" tab
+
+    * Add a pool for each vlan. On DHCP1 
+    
+    "pool Name" = VLAN10. 
+    "DNS server" = 150.0.3.254
+    "dafault gateway" = 192.168.5.1(in this case it is always the first ip address in the network)
+    "subnet" = 255.255.255.192
+    "start ip address" = is 192.168.5.4, 
+    
+    next pool:
+    VLAN20
+    150.0.3.254
+    192.168.5.65
+    255.255.255.192
+    192.168.5.68
+
+    On DHCP2
+
+    VLAN20
+    150.0.3.254
+    192.168.5.129
+    255.255.255.192
+    192.168.5.132
+
+    VLAN10
+    150.0.3.254
+    192.168.5.193
+    255.255.255.192
+    192.168.5.196
+
+    * If VLAN node that is being provided a dynamic IP is connected directly through a router or layer 3 switch toj a DHCP server we would just have to access the interface that is connected to the DHCP server and run command `ip helper-address [ipOfDHCPServer]` but in this example since we are using vlans in different buildings and that means they are not connected directly first we need configure helper in the vlans in the frontier of routing layer, we will do it on step 8
+
+9. Configure VLANS, at the same time we will configure HSRP, and set IP helper which is part of DHCP configurations. First we will access the vlan interface then assign an ip address to the vlans and finally configure HSRP. To configure HSRP we pair two routing layer switches, so we could say this configuration lives in the routing layer. HSRP virtual router IP address will be the gateway of our VLANS. On the left side we will configure MS4, MS5. On the right side MS8, MS9. On each left router will be active and right will be passive. On MS4 run `int vlan 10`, `ip address 192.168.5.2 255.255.255.192`, `standby [anId(a random ID, must commonly vlan# is used, use 10)] ip [vlanGatewayIpAddress use 192.168.5.1]`, `standby [the id we configured in prev step, 10] priority [a number, default priority is 100, use 150]`, `standby 10 preempt` `ip helper-address 170.0.1.254`, `int vlan 20`, `ip address 192.168.5.66 255.225.255.192`. `standby 20 ip 192.168.5.65`, `standby 20 priority 150`, `standby 20 preempt` `ip helper-address 170.0.1.254`. On MS5 `int vlan 10`, `ip address 192.168.5.3 255.255.255.192`, `standby 10 ip 192.168.5.1` `ip helper-address 170.0.1.254`, `int vlan 20`, `ip address 192.168.5.67 255.225.255.192`, `standby 20 ip 192.168.5.65`, `ip helper-address 170.0.1.254`. On MS8 `int vlan 20`, `ip address 192.168.5.130 255.255.255.192`, `standby 20 ip 192.168.5.129`, `standby 20 priority 150`, `standby 20 preempt`, `ip helper-address 180.0.2.254`, `int vlan 10`, `ip address 192.168.5.194 255.225.255.192`, `standby 10 ip 192.168.5.193`, `standby 10 priority 150`, `standby 10 preempt`, `ip helper-address 180.0.2.254`. On MS9 `int vlan 20`, `ip address 192.168.5.131 255.255.255.192`, `standby 20 ip 192.168.5.129`, `ip helper-address 180.0.2.254`, `int vlan 10`, `ip address 192.168.5.195 255.225.255.192`, `standby 20 ip 192.168.5.193`, `ip helper-address 180.0.2.254`.
+
+10. Assign ip addresses to all ports on switches MS0, MS1, MS2, MS3, MS4, MS5, MS7, MS8, MS9, MS11 that are connected to other switches doing routing. Access the right interface for example for ethernet channel `int port-channel #channel`, `no sw` so we can get a router's functionallity, `ip addreas [ipaddress] [subnetMask]` assign the ip address as indicated in the topology
+
+11. Configure EIGRP on switches MS0, MS1, MS2, MS3, MS4, MS5, MS7, MS8, MS9, MS11. firts enter configuration mode and activate dynamic routing functionalllity with `ip routing`, now get the networks the swicht is connected to with `do sh ip route`, take note of all network labeled with a letter "c", start eigrp `router eigrp [autonomous system number, we will use 100]` and for each of those networks do `network [ip address] [negated subnetMask]`
+
+12. This step may vary depending on the networks and subnets used to connect the switches acting as routers, basically all those switches would be the core layer but at least in this specific case we just need to turn of "auto-summary" in two switches, the switches that hold the vlan with the default gate way ip address set to it, the two virtual switches we created but that means we actually have to configure 4 switches, **MS4, MS5, MS8 and MS9**. Enter these switches and do `router eigrp 100`, `no auto-summary`. If no auto summary is set then if there is a subnet connected indirectly, meaning is recongnized by eigrp through other networks inside the autonomous system(AS) like the case of the network `192.168.5.0` being divided into 4 subnets then the routing table  will not explicitly add them to the table but they will be added implicitly like either `192.168.0.0` or `192.168.0.0 null`, in our case it was like the later network with a "null" tag, and this will cause any request made to networks with a similar ip address that are not specifically added to the table to fail automatically, they will not travel further than the switch that has this in its table so waht we need to do is tell the switch to don't that automatically with the command we mentioned, just note that with the ip address without the null communication could have been stablished between left and right side. For example on the left side without `no auto-summary` the table would have included `192.168.5.0/26` and `192.168.5.64/26` with a "C" label under `192.168.5.0/24` but we would have also found a `192.168.5.0/24 Null0` in the same section which as mentioned, causes the requests to fail because it doesn't explicitly recongnizes the other subnets
+
+12. Turn DCHP on end devices(computers) in the 
+
+13. // TODO, configure ACLs on routing layer switches
+
+## Remember
+Routers and Layer three switches can route VLANs and LANs, in this document you will find examples with all of these scenarios but we are putting them together in this section
+
+1. Routing vlans with routers, here you have to do subinterface routing access the so for example access a gigabitethernet port in a router which should be connected to a switch and do something similar to this `int g0/1.10`(the subinterface can .20, .30, etc), `encapsulation dot1q [vlan#]`, set the vlan gateway in this interface `ip address [gatewayIp] [subnetmask]`, `no shutdown`. This process should be done with all routers so they can route any network that is directly connected to it, usually is connected through a layer 2 switch, this should be enough after this you just have to configure static or dynamic routing and trunk and access connections as needed in switches, a good example is "Configure DHCP" example
+
+2. Routing valns with layer 3 switches, a good example is the [this](./Lab/practica2EIGRP.pkt) the instructions are [here](./Lab/Practica2_README.md), basically you have to, again, configure access and trunk connections but this time since this is switches connecting different buildings we have to do a trunk connection between different buildings multilayer switches which are doing the routing using an ethernet channel, the vlans in the routers that are doing the routing in each building has to assing an ip address to the vlan just like in "1." instructions, do `int vlan [vlan#]`, `ip address [vlanDefaultGateway] [subnetMask]`, default gateway should be the same default gateway in computers inside the vlan we want to route, this switch could have a lot of configurations below but the would only configure trunk or access mode as needed. sw to sw is trunk, sw to computer is access. The different buildings are connected with an ethernetchannel, in here we will do something that we do when configuring LANS which is assignig an ip address to the channel that connects to the other building multilayer switches basically configure LACP, do a `no switchport` so it acts as a routing port and we can assign an IP address which is what is similar to what we do when routing LANs assign an IP address to this channel. Then with eigrp you have to announce all the networks it is connected to, the networks below, above, right and left
+
+3. Routing LANs with routers, router interfaces can assign different ip for different subinterfaces only with vlans but with physical networks a single port can only be one gateway as opossed with vlans, so this is all you need to be aware
+
+4. Routing LANS with switches, is the same story(only one LAN per switchport) as the prev number("3.") with the only difference that we need to enable routing `no switchport` to the interface, in this insturctions and the previouse("3.") we would assign an ip address to the interface that connects with the network, then we can connect several routers using static or dynamic routing by adding an ip address(same network) to each side of a router meaning we would use different ip addresses on the same network and then configure the routing protocol
+
+5. One thing that was hard to understand is that the routing node, either a router or a layer 3 switch, can have connections to other layer3 switches which at the same time has connection to other layer 2 switches and those other switches besides the routing node only requires trunk or access connection configured(if routing vlans) or if routing LANs they don't need any configuration at all, the routing node could be actually a pair of layer 3 switches this would be the case if we are using a HSRP, this protocol creates a single router, ofter called a virtual router which serves as a default gateway
