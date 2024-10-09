@@ -588,10 +588,9 @@ This is a "redundancy" protocol for stablishing a fault-tolerant default gateway
 
 10. Assign ip addresses to all ports on switches MS0, MS1, MS2, MS3, MS4, MS5, MS7, MS8, MS9, MS11 that are connected to other switches doing routing. Access the right interface for example for ethernet channel `int port-channel #channel`, `no sw` so we can get a router's functionallity, `ip addreas [ipaddress] [subnetMask]` assign the ip address as indicated in the topology
 
+11. Configure EIGRP on switches MS0, MS1, MS2, MS3, MS4, MS5, MS7, MS8, MS9, MS11. firts enter configuration mode and activate dynamic routing functionalllity with `ip routing`, now get the networks the swicht is connected to with `do sh ip route`, take note of all network labeled with a letter "c", start eigrp `router eigrp [autonomous system number, we will use 100]` and for each of those networks do `network [ip address] [negated subnetMask]`
 
-
-
-* Turn DCHP on end devices(computers)
+ Turn DCHP on end devices(computers)
 
 
 
