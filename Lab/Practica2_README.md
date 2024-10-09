@@ -541,8 +541,7 @@ from 1-6. For LACP `channel-group 1 mode active`
 ### HSRP(Just a quick note)
 This is a "redundancy" protocol for stablishing a fault-tolerant default gateway. If configuring LANs just take the pair of routers/switches that will be used to simulate a single virtual router
 
-7. Configure VLANS, at the same time we will configure HSRP. We will assign an ip address to the vlans in 
-
+7. Configure VLANS, at the same time we will configure HSRP. First we will access the vlan interface then assign an ip address to the vlans and finally configure HSRP. To configure HSRP we pair two routing layer switches, so we could say this configuration lives in the routing layer. HSRP virtual router IP address will be the gateway of our VLANS. On the left side we will configure MS4, MS5. On the right side MS8, MS9. On each left router will be active and right will be passive. On MS4 run `int vlan 10`, `ip address 192.168.5.2 255.255.255.192`, `standby [anId(a random ID, must commonly vlan# is used, use 10)] ip [vlanGatewayIpAddress use 192.168.5.1]`, `standby [the id we configured in prev step, 10] priority [a number, default priority is 100, use 150]`, `standby 10 preempt`, `int vlan 20`, `ip address 192.168.5.66 255.225.255.192`. `standby 20 ip 192.168.5.65`, `standby 20 priority 150`, `standby 20 preempt`. On MS5 `int vlan 10`, `ip address 192.168.5.3 255.255.255.192`, `standby 10 ip 192.168.5.1`, `int vlan 20`, `ip address 192.168.5.67 255.225.255.192`, `standby 20 ip 192.168.5.65`. On MS8 `int vlan 20`, `ip address 192.168.5.130 255.255.255.192`, `standby 20 ip 192.168.5.129`, `standby 20 priority 150`, `standby 20 preempt`, `int vlan 10`, `ip address 192.168.5.194 255.225.255.192`, `standby 10 ip 192.168.5.193`, `standby 10 priority 150`, `standby 10 preempt`. On MS9 `int vlan 20`, `ip address 192.168.5.131 255.255.255.192`, `standby 20 ip 192.168.5.129`, `int vlan 10`, `ip address 192.168.5.195 255.225.255.192`  `standby 20 ip 192.168.5.193`.
 
 
 
