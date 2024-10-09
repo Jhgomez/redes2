@@ -274,66 +274,74 @@ DHCP protocol helps us simplify the proccess of connecting devices and managing 
 
 ## Configure Proyecto 1
 
-1. configure LACP in MS 1, 2, 3 and 7, add a power supply to 3650 switches. `interface range [type(fa/gb)] [range(example: 0/1-4)]`, 
-select protocol `channel-protocol pagp/lacp`, select group and mode, you can create groups only 
-from 1-6. For LACP `channel-group 1 mode active
+1. configure LACP in MS 1, 2, 3 and 7, add a power supply to 3650 switches. `interface range [type(f/g)] [range(example: 0/1-4)]`, select protocol `channel-protocol pagp/lacp`, select group and mode, you can create groups only 
+from 1-6. For LACP `channel-group 1 mode active`
 
-3. configure vtp. MS1 will be the server `vtp mode server`, `vtp version`, `vtp domain juan`, `vtp password juan`. configure the rest of switches layer 2 and 3 as clients but leave ms0 and ms11 alone as they are not actually working with vlans directly. Do `vtp mode client`, `vtp domain juan`, `vtp password juan`
+3. configure vtp. We will have two servers on each side, only access and routing layer cares about VLANs, the core layer doesn't configure any VLAN set up, but also be aware "vtp" protocol can not travel throuhg layer 3 devices, such as swichports acting as routers or a router itself, that is why we will have two servers, one on each side. MS6 on the left side and MS10 on the right side. `vtp mode server`, `vtp version 2`, `vtp domain juan`, `vtp password juan`. Now we will configure the clients on each side. Left side clients are MS4, MS5, SW0 and S1. Right side clients are MS8, MS9, SW2 and SW3. Do `vtp mode client`, `vtp domain juan`, `vtp password juan`
 
-4. configure trunk connections between switches, only switches in access and routing layer. For example in left side it is MS4, MS5, MS6. In MS4 and MS5 only fa0/3 and fa0/4 respectivaly are set to trunk, don't do this for connections between ms0 and other switches as well as ms11 and other switiches, 3650 multilayer switches already has dot1q mode set up so on this switches for port channels do `int port-channel 1`, `sw mode trunk`, `sw trunk allowed vlan 10,20`, just access the right interface `int gi 0/#` and do the same. For 3560 multiplayer switches encapsulation is not set so we need to set it, basically is the same commands we noted in this step already but after accessing the interface run `sw trunk encapsulation dot1q`
-(not sure if its safe but trunk connections are set up between the switches in the middle, they represent different buildings). configure trunk also betwen layer 2 switches and layer 3 switches
+4. Create vlans on server switches MS6 and MS10. `vlan 10`, `name orange`, `vlan 20`, `name green`
 
-5. configure access connections between layer 2 switches and computers, `int fa0/#`, `sw mode access`, `sw access vlan [vlan#]`
+5. Configure Access connections. This is only done in layer 2 switches interfaces connected to end devices and they are considered the Access layer. On the left side access layer is SW0 and SW1, on the right side is SW2 and SW3. On ports connected to end devices run `int fa0/#`, `sw mode access`, `sw access vlan [vlan#]`
+
+6. Configure trunk connections. This is done in connections between access and routing layer as well as within the routing layer itself. Routing layer on the left side is the ports in MS4, MS5 and MS6 connected between each other and to access layer switches as well as the ports in switches of access layer(SW0 and SW1) that are connected to routing layer switches, we find the same "pattern" on the right side with access layer swit, ches(SW2 and SW3) ports connected to routing layer switches(MS8, MS9, MS10) as well as connections withing them. Run `int fa0/#`(you can select a range instead of an interface at a time), `sw trunk encapsulation dot1q`, `sw mode truk`, `sw trunk allowed vlan 10,20`.
+
+7. Configure webssite on SERVER WEB, basically server web will configure a DNS service so we can host a website in this server
+
+    * First go the "Desktop" tab and go to "IP Configuration", IP address will be "150.0.3.254", subnet mask "255.255.255.0", default gateway "150.0.3.1".
+
+    * On the "Services" tab check what service we don't need that can be turned off like the email service then turn up "DNS" service. enter the name of how you want to call your website, I used "pro.com", the "address" has to be the same address as the ip address in prev step "150.0.3.254", select "a record". Save it
 
 ### HSRP(Just a quick note)
 This is a "redundancy" protocol for stablishing a fault-tolerant default gateway. If configuring LANs just take the pair of routers/switches that will be used to simulate a single virtual router
 
+8. Configure DHCP. It was required that for DHCP there is two servers at the top, the left side server provides ip addresses for left side of topology and right side to right side. Just as a note DHCP works by sending a broadcast at the beginning, this is what is known as "DHCP discover", again it is just a broadcast
 
-6. This is the routing/distribution layer. Configure HSRP, we will configure only left side MS4 and MS5 for now, MS4 is the active and MS5 will be the passive node. first access MS4 interface that will be treated as default gateway `int vlan [vlan#]` do `standby [anId(a random ID, must commonly vlan# is used)] ip [vlanGatewayIpAddress]`. Set the priority, note that the switch with the highest priority will be the active node and the one with lowest priority will be passive, `standby [the id we configured in prev step] priority [a number, default priority is 100]`, `standby [id] preempt` this last command is only run on the active node, this helps us to keep this 'registered' as the active router in the case where this switch fails for some reason and it comes back up it will continue being the active router, therefore this last command should only be runned on active switch. Remember to access the second multilayer switch interface that will act as the gateway in conjuction with the first we configured and just run the first command and the second if needed(you can keep default priority value), repeat the all the vlans that exists in this network and then do the same for MS5
-
-7. This is the left side routing layer(MS4 and MS5). Configure vlans with an ip number, we'll use the left side multilayer switches just as an example, we only need to assign ip addresses to vlans in MS4 and MS5. On MS4 do `int vlan 10`, `ip address 192.168.5.2 255.255.255.192`, `int vlan 20`, `ip address 192.168.5.66 255.225.255.192`. On MS5 `int vlan 10`, `ip address 192.168.5.3 255.255.255.192`, `int vlan 20`, `ip address 192.168.5.67 255.225.255.192`. 
-
-8. This step is also the example of how it is done but only in the left side of topology. This step is performed between the routing and core layer, that means it configures the same protocols used in the core layer but in a routing layer switch, what we need to do is the same we will do in the folowing 2 steps. Enter the interfaces that are connected to the MS3 from MS4 and MS5, do `no switchport` so port can provide the same functionallity a router does, assign the IP address indicated in the topology `ip address [ipAddress] [subnetMask]`. Configure EIGRP, enable dynamic routing `ip routing`, check networks connected `sh ip route` take note of networks labeled with a letter "C", `router eigrp [autonoumus system number(we'll use 100)]`, for each network with label "C" do `net [networkIp] [negatedSubnetMask]`
-
-9. Configure layer 3 switches that are acting as routers(MS0, MS1, MS2, MS3, MS7 and MS11), all of them could be considered the core layer however SW0 and MS11 are "special" since SW0 is helping route the servers providing DCHP ip addresses to all other nodes so this is acting as a router and a switch at the same time as well as SW0 which contains the network hosting the website. So basically on all of them you have to assign the ip address indicated in the topology, firts just access the interface observed in the topology, then you have to tell the switch to use this port with with a router's port functionallity `no switchport`, the just assign the ip address `ip address [ipAddress] [subnetMask]`
-
-10. Configure EIGRP on all routing and core layer swithches(MS0, MS1, MS2, MS3, MS4, MS5, MS7, MS8, MS9 and MS11), firts enable dyamic VLAN routing `ip routing` then check whats the networks connected to the switch with `sh ip routing`, take note of all networks labeled with a letter "C", set EIGRP `router eigrp [subnet#(we'll use subnet 100 for all)]`, now run `network [networkIpAddress] [negatedSubnetMask]` for each network with the "C" label
-
-11. make sure step 4 and 5 is also configured on right side. Basically configure trunk and access connections.
-
-12. Do the same as in step 8, but on switches MS8 and MS9. Basically assigning an ip to the ports that will be used for EIGRP and configure EIGRP at the same time
-
-13. Do the same as step 7, but on MS8 and MS9. basically we are assigning ips to vlan in these switches, on MS8 do `int vlan 10`, `ip address 192.168.5.194 255.255.255.192`, `int vlan 20`, `ip address 192.168.5.130 255.225.255.192`. On MS9 `int vlan 10`, `ip address 192.168.5.195 255.255.255.192`, `int vlan 20`, `ip address 192.168.5.131 255.225.255.192`. 
-
-14. Do the same as in step 6 but on right side switches MS8 and MS9. Configure HSRP. MS8 will be active and MS9 will be passive.
-
-15. (Probably and error) I had to set a direct connection between MS1 and MS2 and add it to eigrp, meaning first set an IP address to interfaces and then set eigrp
-
-16. I had an error with EIGRP configurations, since I'm using a subneted network with the vlans and pcs it is recommended to run `no auto-summary` to avoid null networks. For example, in our case we have two subnets on the left and two subnets on the right. this is a problem because since the four subnets are divided EIGRP will register the "missing" subnets ip addresses as null and automatically whenever something tries to send it will just fail, if we run this command EIGRP will be able to learn the other subnets are in this network and add them. no auto-summary is only in MS1, MS3, MS2, with this we fix the error where from left side network `172.16.2.0` was going through either `172.16.0.0 null` or just "generic" `172.16.0.0` and now it recongnizes the network as well as it fix the same issue on right side but when pointing to network `172.16.1.0` its recongnizes it instead of using going through the `172.16.0.0 null`(this one always fails) or through `172.16.0.0` which works but its implicit instead of explicit, we rather network to be in table explicitly 
-
-17. Configure DHCP. It was required that for DHCP there is two servers at the top, the left side server provides ip addresses for left side of topology and right side to right side. We are going to configure the left side server to have an example. Just as a note DHCP works by sending a broadcast at the beginning, this is what is known as "DHCP discover", again it is just a broadcast
-
-    * assign IP address to the server in the "dektop" tab go to "IP Configuration", ip address will be "170.0.1.254", subnet mask "255.255.255.0", default gateway "170.0.1.1"
-
-    * Assign ip addresses to the MS0 interface that is connected to the DHCP server as indicated in topology, note that the ip address assigned to this interface will be the default-gateway of the server it is connected to. `int g1/0/3`, `no switchport`, `ip address 170.0.1.1 255.255.255.0`
+    * assign IP address to the server in the "desktop" tab go to "IP Configuration", DHCP1 ip address will be "170.0.1.254", subnet mask "255.255.255.0", default gateway "170.0.1.1". DHCP2 "180.0.2.254", subnet mask "255.255.255.0", default gateway "180.0.2.1"
 
     * Enter the server and activate DHCP in the "services" tab
 
-    * Add a pool for each vlan, just set value to "pool Name" put VLAN10. DNS server put 170.0.3.254 "dafault gateway", in this case it is always the first ip address in the network in this case it is 192.168.5.1 with subnet 255.255.255.192, star ip address will always be the second available ip address so in this cas it is 192.168.5.2, repeat same process for VLAN20, 192.168.5.65, 255.255.255.192, 192.168.5.66
+    * Add a pool for each vlan. On DHCP1 
+    
+    "pool Name" = VLAN10. 
+    "DNS server" = 150.0.3.254
+    "dafault gateway" = 192.168.5.1(in this case it is always the first ip address in the network)
+    "subnet" = 255.255.255.192
+    "start ip address" = is 192.168.5.4, 
+    
+    next pool:
+    VLAN20
+    150.0.3.254
+    192.168.5.65
+    255.255.255.192
+    192.168.5.68
 
-    * If VLAN node that is being provided a dynamic IP is connected directly through a router or layer 3 switch we would just have to access the interface that is connected to the DHCP server and run command `ip helper-address [ipOfDHCPServer]` but in this example since we are using vlans in different buildings and that means they are not connected directly first we need to add the network address the server is connected to to the EIGRP table `router eigrp 100`, `network 170.0.1.254 0.0.0.255`, after this you have to go to the routing layer multilayer switches MS4 and MS5 and access the vlan interface and run `ip helper-address 170.0.1.254`, and this is done for both vlans on both switches
+    On DHCP2
 
-    * Turn DCHP on end devices(computers)
+    VLAN20
+    150.0.3.254
+    192.168.5.129
+    255.255.255.192
+    192.168.5.132
 
-18. Configure webssite on SERVER WEB, basically server web will configure a DNS service so we can host a website in this server
+    VLAN10
+    150.0.3.254
+    192.168.5.193
+    255.255.255.192
+    192.168.5.196
 
-    * First go the "Desktop" tab and go to "IP Configuration", IP address will be "170.0.3.254", subnet mask "255.255.255.0", default gateway "170.0.3.1", DNS server will be same as ip address "170.0.3.254"
+    * If VLAN node that is being provided a dynamic IP is connected directly through a router or layer 3 switch toj a DHCP server we would just have to access the interface that is connected to the DHCP server and run command `ip helper-address [ipOfDHCPServer]` but in this example since we are using vlans in different buildings and that means they are not connected directly first we need configure helper in the vlans in the frontier of routing layer, we will do it on step 8
 
-    * access MS11 interface connected to this server do `no sw`, `ip address  170.0.3.1 255.255.255.0` ip address has to be the same default gateway configured in prev step, and now add it to EIGRP table just like we did in prev steps `router eigrp 100`, `network 170.0.5.0 0.0.0.255` 
+9. Configure VLANS, at the same time we will configure HSRP, and set IP helper which is part of DHCP configurations. First we will access the vlan interface then assign an ip address to the vlans and finally configure HSRP. To configure HSRP we pair two routing layer switches, so we could say this configuration lives in the routing layer. HSRP virtual router IP address will be the gateway of our VLANS. On the left side we will configure MS4, MS5. On the right side MS8, MS9. On each left router will be active and right will be passive. On MS4 run `int vlan 10`, `ip address 192.168.5.2 255.255.255.192`, `standby [anId(a random ID, must commonly vlan# is used, use 10)] ip [vlanGatewayIpAddress use 192.168.5.1]`, `standby [the id we configured in prev step, 10] priority [a number, default priority is 100, use 150]`, `standby 10 preempt` `ip helper-address 170.0.1.254`, `int vlan 20`, `ip address 192.168.5.66 255.225.255.192`. `standby 20 ip 192.168.5.65`, `standby 20 priority 150`, `standby 20 preempt` `ip helper-address 170.0.1.254`. On MS5 `int vlan 10`, `ip address 192.168.5.3 255.255.255.192`, `standby 10 ip 192.168.5.1` `ip helper-address 170.0.1.254`, `int vlan 20`, `ip address 192.168.5.67 255.225.255.192`, `standby 20 ip 192.168.5.65`, `ip helper-address 170.0.1.254`. On MS8 `int vlan 20`, `ip address 192.168.5.130 255.255.255.192`, `standby 20 ip 192.168.5.129`, `standby 20 priority 150`, `standby 20 preempt`, `ip helper-address 180.0.2.254`, `int vlan 10`, `ip address 192.168.5.194 255.225.255.192`, `standby 10 ip 192.168.5.193`, `standby 10 priority 150`, `standby 10 preempt`, `ip helper-address 180.0.2.254`. On MS9 `int vlan 20`, `ip address 192.168.5.131 255.255.255.192`, `standby 20 ip 192.168.5.129`, `ip helper-address 180.0.2.254`, `int vlan 10`, `ip address 192.168.5.195 255.225.255.192`, `standby 20 ip 192.168.5.193`, `ip helper-address 180.0.2.254`.
 
-    * On the "Services" tab check what service we don't need that can be turned off like the email service then turn up "DNS" service. enter the name of how you want to call your website, I used "proj.yo", the address has to be the same address as the ip address and server name as in prev step "170.0.3.254", select "a record". Save it
+10. Assign ip addresses to all ports on switches MS0, MS1, MS2, MS3, MS4, MS5, MS7, MS8, MS9, MS11 that are connected to other switches doing routing. Access the right interface for example for ethernet channel `int port-channel #channel`, `no sw` so we can get a router's functionallity, `ip addreas [ipaddress] [subnetMask]` assign the ip address as indicated in the topology
 
-19. // TODO, configure ACLs on routing layer switches
+11. Configure EIGRP on switches MS0, MS1, MS2, MS3, MS4, MS5, MS7, MS8, MS9, MS11. firts enter configuration mode and activate dynamic routing functionalllity with `ip routing`, now get the networks the swicht is connected to with `do sh ip route`, take note of all network labeled with a letter "c", start eigrp `router eigrp [autonomous system number, we will use 100]` and for each of those networks do `network [ip address] [negated subnetMask]`
+
+12. This step may vary depending on the networks and subnets used to connect the switches acting as routers, basically all those switches would be the core layer but at least in this specific case we just need to turn of "auto-summary" in two switches, the switches that hold the vlan with the default gate way ip address set to it, the two virtual switches we created but that means we actually have to configure 4 switches, **MS4, MS5, MS8 and MS9**. Enter these switches and do `router eigrp 100`, `no auto-summary`. If no auto summary is set then if there is a subnet connected indirectly, meaning is recongnized by eigrp through other networks inside the autonomous system(AS) like the case of the network `192.168.5.0` being divided into 4 subnets then the routing table  will not explicitly add them to the table but they will be added implicitly like either `192.168.0.0` or `192.168.0.0 null`, in our case it was like the later network with a "null" tag, and this will cause any request made to networks with a similar ip address that are not specifically added to the table to fail automatically, they will not travel further than the switch that has this in its table so waht we need to do is tell the switch to don't that automatically with the command we mentioned, just note that with the ip address without the null communication could have been stablished between left and right side. For example on the left side without `no auto-summary` the table would have included `192.168.5.0/26` and `192.168.5.64/26` with a "C" label under `192.168.5.0/24` but we would have also found a `192.168.5.0/24 Null0` in the same section which as mentioned, causes the requests to fail because it doesn't explicitly recongnizes the other subnets
+
+12. Turn DCHP on end devices(computers) in the 
+
+13. // TODO, configure ACLs on routing layer switches
 
 ## Remember
 Routers and Layer three switches can route VLANs and LANs, in this document you will find examples with all of these scenarios but we are putting them together in this section
