@@ -2,9 +2,9 @@
 The following is a list of commands used when configuring different nodes in the network
 
 ## Switches
-* **enable**: previous to configurations
+* **enable | en**: previous to configurations
 
-* **conf | configure ter | configure terminal**: either should work to enter 
+* **conf t | configure ter | configure terminal**: either should work to enter 
 configuration mode it depends on the version of paket tracer
 
 * **hostname**: defines a name to the switch
