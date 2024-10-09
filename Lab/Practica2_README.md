@@ -541,12 +541,51 @@ from 1-6. For LACP `channel-group 1 mode active`
 ### HSRP(Just a quick note)
 This is a "redundancy" protocol for stablishing a fault-tolerant default gateway. If configuring LANs just take the pair of routers/switches that will be used to simulate a single virtual router
 
-7. Configure VLANS, at the same time we will configure HSRP. First we will access the vlan interface then assign an ip address to the vlans and finally configure HSRP. To configure HSRP we pair two routing layer switches, so we could say this configuration lives in the routing layer. HSRP virtual router IP address will be the gateway of our VLANS. On the left side we will configure MS4, MS5. On the right side MS8, MS9. On each left router will be active and right will be passive. On MS4 run `int vlan 10`, `ip address 192.168.5.2 255.255.255.192`, `standby [anId(a random ID, must commonly vlan# is used, use 10)] ip [vlanGatewayIpAddress use 192.168.5.1]`, `standby [the id we configured in prev step, 10] priority [a number, default priority is 100, use 150]`, `standby 10 preempt`, `int vlan 20`, `ip address 192.168.5.66 255.225.255.192`. `standby 20 ip 192.168.5.65`, `standby 20 priority 150`, `standby 20 preempt`. On MS5 `int vlan 10`, `ip address 192.168.5.3 255.255.255.192`, `standby 10 ip 192.168.5.1`, `int vlan 20`, `ip address 192.168.5.67 255.225.255.192`, `standby 20 ip 192.168.5.65`. On MS8 `int vlan 20`, `ip address 192.168.5.130 255.255.255.192`, `standby 20 ip 192.168.5.129`, `standby 20 priority 150`, `standby 20 preempt`, `int vlan 10`, `ip address 192.168.5.194 255.225.255.192`, `standby 10 ip 192.168.5.193`, `standby 10 priority 150`, `standby 10 preempt`. On MS9 `int vlan 20`, `ip address 192.168.5.131 255.255.255.192`, `standby 20 ip 192.168.5.129`, `int vlan 10`, `ip address 192.168.5.195 255.225.255.192`  `standby 20 ip 192.168.5.193`.
+7. Configure DHCP. It was required that for DHCP there is two servers at the top, the left side server provides ip addresses for left side of topology and right side to right side. Just as a note DHCP works by sending a broadcast at the beginning, this is what is known as "DHCP discover", again it is just a broadcast
+
+    * assign IP address to the server in the "desktop" tab go to "IP Configuration", DHCP1 ip address will be "170.0.1.254", subnet mask "255.255.255.0", default gateway "170.0.1.1". DHCP2 "180.0.2.254", subnet mask "255.255.255.0", default gateway "180.0.2.1"
+
+    * Enter the server and activate DHCP in the "services" tab
+
+    * Add a pool for each vlan. On DHCP1 
+    
+    "pool Name" = VLAN10. 
+    "DNS server" = 150.0.3.254
+    "dafault gateway" = 192.168.5.1(in this case it is always the first ip address in the network)
+    "subnet" = 255.255.255.192
+    "start ip address" = is 192.168.5.4, 
+    
+    next pool:
+    VLAN20
+    150.0.3.254
+    192.168.5.65
+    255.255.255.192
+    192.168.5.68
+
+    On DHCP2
+
+    VLAN20
+    150.0.3.254
+    192.168.5.129
+    255.255.255.192
+    192.168.5.132
+
+    VLAN10
+    150.0.3.254
+    192.168.5.193
+    255.255.255.192
+    192.168.5.196
+
+    * If VLAN node that is being provided a dynamic IP is connected directly through a router or layer 3 switch toj a DHCP server we would just have to access the interface that is connected to the DHCP server and run command `ip helper-address [ipOfDHCPServer]` but in this example since we are using vlans in different buildings and that means they are not connected directly first we need configure helper in the vlans in the frontier of routing layer, we will do it on step 8
+
+8. Configure VLANS, at the same time we will configure HSRP, and set IP helper which is part of DHCP configurations. First we will access the vlan interface then assign an ip address to the vlans and finally configure HSRP. To configure HSRP we pair two routing layer switches, so we could say this configuration lives in the routing layer. HSRP virtual router IP address will be the gateway of our VLANS. On the left side we will configure MS4, MS5. On the right side MS8, MS9. On each left router will be active and right will be passive. On MS4 run `int vlan 10`, `ip address 192.168.5.2 255.255.255.192`, `standby [anId(a random ID, must commonly vlan# is used, use 10)] ip [vlanGatewayIpAddress use 192.168.5.1]`, `standby [the id we configured in prev step, 10] priority [a number, default priority is 100, use 150]`, `standby 10 preempt` `ip helper-address 170.0.1.254`, `int vlan 20`, `ip address 192.168.5.66 255.225.255.192`. `standby 20 ip 192.168.5.65`, `standby 20 priority 150`, `standby 20 preempt` `ip helper-address 170.0.1.254`. On MS5 `int vlan 10`, `ip address 192.168.5.3 255.255.255.192`, `standby 10 ip 192.168.5.1` `ip helper-address 170.0.1.254`, `int vlan 20`, `ip address 192.168.5.67 255.225.255.192`, `standby 20 ip 192.168.5.65`, `ip helper-address 170.0.1.254`. On MS8 `int vlan 20`, `ip address 192.168.5.130 255.255.255.192`, `standby 20 ip 192.168.5.129`, `standby 20 priority 150`, `standby 20 preempt`, `ip helper-address 180.0.2.254`, `int vlan 10`, `ip address 192.168.5.194 255.225.255.192`, `standby 10 ip 192.168.5.193`, `standby 10 priority 150`, `standby 10 preempt`, `ip helper-address 180.0.2.254`. On MS9 `int vlan 20`, `ip address 192.168.5.131 255.255.255.192`, `standby 20 ip 192.168.5.129`, `ip helper-address 180.0.2.254`, `int vlan 10`, `ip address 192.168.5.195 255.225.255.192`, `standby 20 ip 192.168.5.193`, `ip helper-address 180.0.2.254`.
 
 
 
 
 
+
+* Turn DCHP on end devices(computers)
 
 
 
