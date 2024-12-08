@@ -46,7 +46,7 @@ configuration mode it depends on the version of paket tracer
 
 * **Configure stp mode**: Spannig tree protocol helps our network stay bucle free meaning it helps the network find the best route to a node of the network, cisco switches has STP(PVST) configured by default wich is slower than RSTP(RPVST). in configuration mode run **spannig-tree mode pvst|rapid-pvst**
 
-* **configure security in ports**: Switches are consider a weak point in all networks since the ports can be reached physically, to mitigate this vulnerabillity you can run set restrictions to your ports using this commands: first access the port you want to secure, second configure the connection as an access connection **switchport mode access**, then **switchport port-security aging|mac-address|maximum|violation**. The ports can not be dynamic meaning the auto negotiation has to be turned off, in some switches just definining switchport mode to either trunk or access is enough but in others defining trunk mode is doesn't turn off auto negotiation so you have to also set **switchport nonegotate** to be able to run this configurations
+* **configure security in ports**: Switches are consider a weak point in all networks since the ports can be reached physically, to mitigate this vulnerabillity you can run set restrictions to your ports using this commands: first access the port you want to secure, second configure the connection as an access connection **switchport mode access**, then **switchport port-security aging|mac-address|maximum|violation**. The ports can not be dynamic meaning the auto negotiation has to be turned off, in some switches just definining switchport mode to either trunk or access is enough but in others defining trunk mode is doesn't turn off auto negotiation so you have to also set **switchport nonegotate** to be able to run this configurations. **switchport port-security mac-address sticky**, **sw port-security maximum #quantity**
 
 * **show spannig-tree**: you can identify the root switch in a spanning tree procotol network using this command, only the root switch will display something indicating it is the root, you can attach de word **summary** to this command to get another version of the info. Visually the root switch will have all its connections enabled
 
@@ -67,6 +67,12 @@ note that some of the configurations done by the previous commands like setting 
 * **Configurar Protocolo VTP**: It is used to configure and manage VLANs, you can create delete, rename all VLANs from one place instead of doing it in each different node. There is three types, SERVER, CLIENT, TRANSPARENT. SERVER mode propagates VLAN info to other switches in the domain. CLIENT mode depens on a VTP SERVER, it cannot make any changes in VLAN info itself. **vtp mode [client|server|transparent]**, **vtp version [1|2]**, **vtp domain [domain(name)]**, **vtp password [password]**, when defining a switch as server and one or more switches as clients the domain(name) has to match on all nodes, optional: **show vtp status**
 
 * **show running-config**: shows ports configurations, you can see if a port will feature a host or access connection
+
+* **Configure a loopback interface**: `interface Loopback0`, assign an ip address `ip address [ip address] [subnetmask]`
+
+* **Add a description to an interface**: access the interface and do `description [some text]`
+
+* **Enable asynchronous commands**: You will be able to execute or configure other commands while other configurations are being processed in the background. `line console 0`, `logging synchronous`, `exec-timeout 0 0`
 
 ## Static Routing
 We can route VLANs or LANs, this means we can intercommunicate between networks either static or dinamically. Static routing means is all set up, only networks we set up are able to communicate. we can define different set ups, there are a lot of configurations we can have or ommit
@@ -221,6 +227,10 @@ This setup is pretty much the same as the previous example right before this one
 
 * `sh ip interface brief`: shows vlans, fa, gi, and other ports or interface that has been assigned an IP address
 
+* `show port-security interface interface#`: shows security config of the interface selected
+
+* `ip config-all`: shows info like mac address of the NIC
+
 ## Ethernet Channel - PAGP/LACP
 This two protocols allows us to create ethernet channels easily. Ethernet channels are a logical group of physical connections that will be treated as a single logical connection. These two protocols are used between switch to switch to group two or more ethernet connections to be treated as a single connection
 
@@ -260,7 +270,7 @@ DHCP protocol helps us simplify the proccess of connecting devices and managing 
 
 8. Here we are configuring vlans statically. Configure R2 basically same proccess as R1(step 1,2, 3 and 4). `int gi 0/1.30`, `encapsulation dot1q 30`, set the vlan30 gateway in this interface `ip address 192.168.30.1 255.255.255.0`. `no shutdown`. `int gi 0/1.40`, `encapsulation dot1q 40`, set the vlan30 gateway in this interface `ip address 192.168.40.1 255.255.255.0`. `no shutdown`, check configuration with `sh ip interfaces brief`
 
-9. configure DHCP.  Vlan30 `ip dhcp pool vlan30`, `default-router 192.168.30.1`(same as vlan default gateway), `network 192.168.30.0 255.255.255.0`, `dns-sercver 192.168.30.5`. Vlan40 `ip dhcp pool vlan40`, `default-router 192.168.40.1`(same as vlan default gateway), `network 192.168.40.0 255.255.255.0`, `dns-sercver 192.168.40.5`. After setting them up exclude some ip addresses in configuration mode with `ip dhcp excluded-address 192.168.30.1 192.168.30.2 192.168.30.5` `ip dhcp excluded-address 192.168.40.1 192.168.40.2 192.168.40.5`, note we are exlcuding the defaul gateway and the dns server ip address
+9. configure DHCP.  Vlan30 `ip dhcp pool vlan30(the name of the pool)`, `default-router 192.168.30.1`(same as vlan default gateway), `network 192.168.30.0 255.255.255.0`, `dns-sercver 192.168.30.5`. Vlan40 `ip dhcp pool vlan40`, `default-router 192.168.40.1`(same as vlan default gateway), `network 192.168.40.0 255.255.255.0`, `dns-sercver 192.168.40.5`. After setting them up exclude some ip addresses in configuration mode with `ip dhcp excluded-address 192.168.30.1 192.168.30.2 192.168.30.5` `ip dhcp excluded-address 192.168.40.1 192.168.40.2 192.168.40.5`, note we are exlcuding the defaul gateway and the dns server ip address
 
 3. configure seral port in R2 `int serial 0/1/0`, `ip address 192.168.1.226 255.255.255.252`, `no shutdown`
 
